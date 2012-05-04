@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Extension>
+
+	<name>localizer</name>
+	<version>0.1</version>
+	<title>本地化</title>
+	
+
+	<class>org.opencomb.localizer.Localizer</class>
+	<package folder="/class" namespace="org.opencomb.localizer" />
+
+	<template folder="/template" />
+	
+	<publicFolder folder="/public" />
+	
+</Extension>
