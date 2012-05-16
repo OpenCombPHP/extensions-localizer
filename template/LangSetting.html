@@ -1,0 +1,57 @@
+<h1>语言设定</h1>
+<widget new='langselect'/><br/>
+<msgqueue />
+	<foreach for='$arrLang' key='country_lang' item='content'>
+		<if "{=$content['selected']}==1">
+			<label>默认:<input type="radio" size="5" name="lang_select" checked="checked"  onclick="defaultLang('{=$country_lang}')" value="{=$content['country'].$content['lang']}"/></label>&nbsp;&nbsp;&nbsp;&nbsp;		
+			<else/>
+			<label>默认:<input type="radio" size="5" name="lang_select" onclick="defaultLang('{=$country_lang}')"value="{=$content['country'].$content['lang']}"/></label>&nbsp;&nbsp;&nbsp;&nbsp;		
+		</if>
+		<label>国家/地区:<input type="text" size="5" name="Country_text_edit[]" value="{=$content['country']}" readonly="readonly"/></label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>语言:<input type="text" size="5" name="Language_text_edit[]" value="{=$content['lang']}" readonly="readonly"/></label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>标题:<input type="text" size="5" name="Title_text_edit[]" value="{=$content['title']}" readonly="readonly"/></label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label><input type="checkbox" name="Use[]" {=$content['used']=='1' ? 'checked' :''} onclick="use('{=$country_lang}')"/>可用</label>		
+		<label><a href="?c=org.opencomb.localizer.LangDelete&dpath={=$country_lang}">删除</a></label>
+		<label><a href="?c=org.opencomb.localizer.LangSort&spath={=$country_lang}&sortTag=up">向上</a></label>
+		<label><a href="?c=org.opencomb.localizer.LangSort&spath={=$country_lang}&sortTag=down">向下</a></label>
+		<br/>
+	</foreach>
+	<br/><br/>
+<form  method="post" >
+	<div class='langSetting'>
+		<label>国家/地区:<input type="text" size="5" name="Country_text[]" /></label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>语言:<input type="text" size="5" name="Language_text[]" /></label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>标题:<input type="text" size="5" name="Title_text[]" /></label>&nbsp;&nbsp;&nbsp;&nbsp;
+	</div>
+	<a id='addLang' href='#'>添加</a><br/><br/><br/>
+	<input type="submit" name="" value="保存" />
+</form>
+<script>
+jquery(function(){
+	//添加按钮功能
+	jquery('#addLang').click(function(){
+		var langForm = jquery(".langSetting").last().clone();
+		jquery(this).before(langForm);
+		return false;
+	});
+});
+
+function defaultLang(country_lang){
+	jQuery.ajax({
+		url : "?c=org.opencomb.localizer.LangSelectDefault&dpath="+country_lang,
+		success : function(){
+			location.reload() ;  //刷新页面直接看结果
+		}
+	});
+}
+
+function use(country_lang){
+	alert(country_lang);
+	jQuery.ajax({
+		url : "?c=org.opencomb.localizer.LangSwichFront&dpath="+country_lang,
+		success : function(){
+			location.reload() ;  //刷新页面直接看结果
+		}
+	});
+}
+</script>
