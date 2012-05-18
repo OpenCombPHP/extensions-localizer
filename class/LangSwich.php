@@ -17,32 +17,36 @@ use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 use org\jecat\framework\locale\Locale;
+use org\jecat\framework\util\EventManager;
 
 class LangSwich extends ControlPanel
 {
+	const beforeRespond = 'beforeRespond' ;
 	public function createBeanConfig()
 	{
 		$this->setCatchOutput(false) ;
 		return array(
-			'title'=> '文章内容',
-			'view:langSwich'=>array(
-				'template'=>'langSwich.html',
-				'class'=>'form',
-				'widgets' => array(
-				),
-			),
+// 			'title'=> '文章内容',
+// 			'view:langSwich'=>array(
+// 				'template'=>'langSwich.html',
+// 				'class'=>'form',
+// 				'widgets' => array(
+// 				),
+// 			),
 		);
 	}
 	
 	public function process()
 	{
-		if($this->params['lang'])
+		if($this->params['langnew'])
 		{
-			$arrLang=explode('_',$this->params['lang']);
-			Locale::switchSessionLocale($arrLang[0],$arrLang[1],true);
-			$skey="切换语言";
-			$this->viewLangSwich->createMessage(Message::success,"%s 成功",$skey) ;
+			// 触发事件
+			$aEventManager = EventManager::singleton() ;
+			$arrEventArgvs = array($this->params['langnew'],$this->params['langold'],$this->params['pageUrl']);
+			$aEventManager->emitEvent(__CLASS__,self::beforeRespond,$arrEventArgvs) ;
+			$sPageUrl = $this->params['pageUrl'];
+			echo $sPageUrl;
+			//$this::location($sPageUrl,2);
 		};
-		
 	}
 }

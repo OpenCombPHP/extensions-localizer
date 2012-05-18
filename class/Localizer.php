@@ -7,6 +7,16 @@ use org\jecat\framework\locale\LanguagePackageFolders;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\locale\Locale;
 use org\opencomb\platform\ext\Extension ;
+use org\jecat\framework\ui\xhtml\weave\WeaveManager;
+use org\jecat\framework\ui\xhtml\weave\Patch;
+use org\jecat\framework\ui\ObjectContainer ;
+use org\jecat\framework\ui\xhtml\Node ;
+use org\jecat\framework\db\sql\compiler\NameMapper; 
+use org\jecat\framework\db\DB;
+use org\jecat\framework\mvc\model\db\orm\Prototype;
+use org\jecat\framework\mvc\model\db\Model;
+use org\jecat\framework\lang\Exception;
+use org\jecat\framework\util\EventManager;
 
 class Localizer extends Extension 
 {
@@ -21,7 +31,6 @@ class Localizer extends Extension
 		) ;
 		// 注册语言包目录
 		LanguagePackageFolders::singleton()->registerFolder($this->unarchiveSentenceFolder()->path()) ;
-		
 	}
 	
 	/**
@@ -72,4 +81,141 @@ class Localizer extends Extension
 				
 		);
 	}
+	
+	public function initRegisterUITemplateWeave(WeaveManager $aWeaveManager)
+	{
+		{
+			$aWeaveManager->registerFilter( 'coresystem:FrontFrame.html', "/div@0/p@0", array(__CLASS__,'filterForFrontFrameMergeIcon') ) ;
+		}
+	
+		// 将 mvc-merger 扩展提供的模板文件 merger/MergeIconMenu.html 做为补丁，应用到  coresystem 扩展的模板 FrontFrame.html 中的第一个<div>下的第一个<p> 内部的末尾
+		$aWeaveManager->registerCode( 'coresystem:FrontFrame.html', "/div@0/p@0", '<widget new=\'langselect\'/>', Patch::insertAfter ) ;
+		$aWeaveManager->registerCode( 'coresystem:ControlPanelFrame.html', "/div@0/div@0/div@0", '<widget new=\'langselect\'/>', Patch::insertAfter ) ;
+		
+		// -------------------------------------------------
+		// 根据 setting 中保存的信息，应用模板补丁
+		foreach($this->setting()->key("/merge/uiweave",true)->keyIterator() as $aNsKey)
+		{
+			$sNamespace = $aNsKey->name() ;
+			foreach($aNsKey->keyIterator() as $aTemplateKey)
+			{
+				$sTemplate = $aTemplateKey->name() ;
+				$arrAllPatchs = $aTemplateKey->item('arrPatchs',array()) ;
+	
+				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
+				{
+					foreach($arrPatchList as $arrPatch)
+					{
+						$aWeaveManager->registerCode( $sNamespace.':'.$sTemplate, $sXPath, $arrPatch[1], $arrPatch[0] ) ;
+					}
+				}
+			}
+		}
+
+	}
+	
+	static public function filterForFrontFrameMergeIcon(ObjectContainer $aObjectContainer,Node $aTargetObject)
+	{	
+		// 将 这个 node 标签改为 div
+		$aTargetObject->headTag()->setName('div') ;		// 头部标签
+		$aTargetObject->tailTag()->setName('div') ;		// 尾部标签
+	}
+	
+	/*
+	public function active()
+	{
+		$aLocale = Locale::singleton();
+		$sPrefix = DB::singleton()->tableNamePrefix();
+		try{
+			
+			$sSQL = 'select * from'.' '.$sPrefix.'opencms_article'.'_'.str_replace('-', '_', $aLocale->localeName());
+			$aRecords = DB::singleton()->query($sSQL);
+			NameMapper::singleton()->mapTableName($sPrefix.'opencms_article',$sPrefix.'opencms_article'.'_'.str_replace('-', '_', $aLocale->localeName()));
+		}catch(Exception $e){
+			$sSQL = "show create table opencms_article";
+			$aRecords = DB::singleton()->query($sSQL);
+			$arrCreateCommand = $aRecords->fetchAll();
+			$sSQLCreate = str_replace($sPrefix.'opencms_article', $sPrefix.'opencms_article'.'_'.str_replace('-', '_', $aLocale->localeName()), $arrCreateCommand[0]['Create Table']);
+			DB::singleton()->execute($sSQLCreate);
+			NameMapper::singleton()->mapTableName($sPrefix.'opencms_article',$sPrefix.'opencms_article'.'_'.str_replace('-', '_', $aLocale->localeName()));
+		}
+	
+		try{
+			$sSQL = 'select * from'.' '.$sPrefix.'opencms_attachment'.'_'.str_replace('-', '_', $aLocale->localeName());
+			$aRecords = DB::singleton()->query($sSQL);
+			NameMapper::singleton()->mapTableName($sPrefix.'opencms_attachment',$sPrefix.'opencms_attachment'.'_'.str_replace('-', '_', $aLocale->localeName()));
+		}catch(Exception $e){
+			$sSQL = "show create table opencms_attachment";
+			$aRecords = DB::singleton()->query($sSQL);
+			$arrCreateCommand = $aRecords->fetchAll();
+			$sSQLCreate = str_replace($sPrefix.'opencms_attachment', $sPrefix.'opencms_attachment'.'_'.str_replace('-', '_', $aLocale->localeName()), $arrCreateCommand[0]['Create Table']);
+			DB::singleton()->execute($sSQLCreate);
+			NameMapper::singleton()->mapTableName($sPrefix.'opencms_attachment',$sPrefix.'opencms_attachment'.'_'.str_replace('-', '_', $aLocale->localeName()));
+		}
+		try{
+		
+			$sSQL = 'select * from'.' '.$sPrefix.'opencms_category'.'_'.str_replace('-', '_', $aLocale->localeName());
+		
+			$aRecords = DB::singleton()->query($sSQL);
+			NameMapper::singleton()->mapTableName($sPrefix.'opencms_category',$sPrefix.'opencms_category'.'_'.str_replace('-', '_', $aLocale->localeName()));
+		}catch(Exception $e){
+			$sSQL = "show create table opencms_category";
+			$aRecords = DB::singleton()->query($sSQL);
+			$arrCreateCommand = $aRecords->fetchAll();
+			$sSQLCreate = str_replace($sPrefix.'opencms_category', $sPrefix.'opencms_category'.'_'.str_replace('-', '_', $aLocale->localeName()), $arrCreateCommand[0]['Create Table']);
+			DB::singleton()->execute($sSQLCreate);
+			NameMapper::singleton()->mapTableName($sPrefix.'opencms_category',$sPrefix.'opencms_category'.'_'.str_replace('-', '_', $aLocale->localeName()));
+		}
+		
+	}
+	
+	public function initRegisterEvent(EventManager $aEventMgr)
+	{
+		$aEventMgr->registerEventHandle(
+				'org\\opencomb\\localizer\\LangSwich'
+				, LangSwich::beforeRespond
+				, array(__CLASS__,'onBeforeRespond')
+		);
+	}
+	
+	static public function onBeforeRespond($sLangCountryNew,$sLangCountryOld,$sPageUrl)
+	{
+		
+		$arrLangCountry = explode('_',$sLangCountryNew);
+		$sDpath = $sLangCountryNew;
+		$arrLang =Localizer::langIterator();
+		$arrLang[$sDpath]['selected']=1;
+		
+		foreach($arrLang as $key=>$value)
+		{
+			if($key!=$sDpath)
+			{
+				$arrLang[$key]['selected']=0;
+			}else{
+				$arrLang[$key]['selected']=1;
+			}
+		
+		}
+		
+		$aSetting = Extension::flyweight('localizer')->setting();
+		$aSetting->deleteKey('/');
+		foreach($arrLang as $key=>$value)
+		{
+			$aSetting->setItem('/',$key,$value);
+		}
+		
+		Locale::switchSessionLocale($arrLangCountry[0],$arrLangCountry[1],true);	
+		
+	}
+	
+	static function langIterator(){
+		$arrLang = array();
+		$aSetting = Extension::flyweight('localizer')->setting();
+		$aKey=$aSetting->key('/',true);
+		foreach($aKey->itemIterator() as $key=>$value){
+			$arrLang[$value]=$aKey->item($value,array());
+		}
+		return $arrLang;
+	}
+	*/
 }

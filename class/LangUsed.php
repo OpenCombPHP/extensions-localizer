@@ -39,7 +39,7 @@ class LangUsed extends ControlPanel
 		$arrLang=$this->langIterator();
 		$sDpath=$_GET['dpath'];
 		if($arrLang[$sDpath]['used']=="1")
-		{
+		{	
 			$arrLang[$sDpath]['used']='0';
 		}
 		else

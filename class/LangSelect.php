@@ -37,4 +37,18 @@ class LangSelect extends Widget {
 		return $arrLang;
 	}
 	
+	public function selectedLangCountry(){
+		$aSetting = Extension::flyweight('localizer')->setting();
+		$aKey=$aSetting->key('/',true);
+		foreach($aKey->itemIterator() as $key=>$value){
+			$arrTemp=$aKey->item($value,array());
+			if($arrTemp['selected']=='1')
+			{
+				$sSeletedLangCountry = $arrTemp['lang'].'_'.$arrTemp['country'];
+			}
+	
+		}
+		return $sSeletedLangCountry;
+	}
+	
 }

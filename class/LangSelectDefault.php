@@ -17,6 +17,7 @@ use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
+use org\jecat\framework\setting\Setting;
 
 class LangSelectDefault extends ControlPanel
 {
@@ -30,6 +31,7 @@ class LangSelectDefault extends ControlPanel
 	{	
 		$arrLang=$this->langIterator();
 		$sDpath=$_GET['dpath'];
+		$arrDpath = explode('_',$sDpath);
 		$arrLang[$sDpath]['selected']=1;
 
 		foreach($arrLang as $key=>$value)
@@ -49,6 +51,10 @@ class LangSelectDefault extends ControlPanel
 		{
 			$aSetting->setItem('/',$key,$value);
 		}
+		$aSettingSingle = Setting::singleton();
+		$aSettingSingle->deleteKey('service/local');
+		$aSettingSingle->setItem('service/locale','language',$arrDpath[0]);
+		$aSettingSingle->setItem('service/locale','language',$arrDpath[1]);
 		
 	}
 	

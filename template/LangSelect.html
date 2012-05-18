@@ -9,7 +9,7 @@
 <script>
 jquery(function(){
 	jquery('.langselect').change(function(){
-		window.location.href='/?c=org.opencomb.localizer.LangSwich&lang=' + jquery(this).val();
+		window.location.href='/?c=org.opencomb.localizer.LangSwich&langnew=' + jquery(this).val()+'&pageUrl={/*.uri}'+'&langold={=$theWidget->selectedLangCountry()}';
 	});
 });
 </script>

@@ -19,6 +19,7 @@ use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 use org\jecat\framework\locale\Locale;
 use org\jecat\framework\locale\SentenceLibrary;
+use org\jecat\framework\setting\Setting;
 
 class LangTranslation extends ControlPanel
 {
@@ -86,13 +87,13 @@ class LangTranslation extends ControlPanel
 		$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
 		}
 		
-		
+		$selectedPage = 0;
 		$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
 		$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
 		$arrLangSelectMenu = $this->getLangSelectMenu();
 		$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
 		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
-		
+		$this->viewLangTranslation->variables()->set('selectedPage',$selectedPage);
 		
 		//提交
 		if($this->viewLangTranslation->isSubmit())
@@ -141,6 +142,7 @@ class LangTranslation extends ControlPanel
 			
 			file_put_contents($sPathBaseLibrarySentence,'<?php return'.' '.var_export($arrSentenceBase,true).';');
 			file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
+			$this->displayTranslationLibrary();
 		}
 		
 		//选择语言
@@ -155,14 +157,15 @@ class LangTranslation extends ControlPanel
 		{
 			$sSpath=$this->params['spath'];
 			$nNumberRow = $this->params['rownumber'];
+			$selectedPage = $nNumberRow;
 			$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSpath);
 			$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage($sSpath, $arrSentenceLibrary);
-			echo $nNumberRow;
-
+			
 			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
 			$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$nNumberRow,$nPerPageRowNumber=20);
 			$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
 			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+			$this->viewLangTranslation->variables()->set('selectedPage',$selectedPage);
 		}
 		
 		
@@ -385,7 +388,7 @@ class LangTranslation extends ControlPanel
 	public function langSwichFront($sSpath)
 	{
 		
-		$sLangCountry = $sSpath;echo $sSpath;
+		$sLangCountry = $sSpath;
 		$arrLangCountry = explode('_',$sSpath);
 		$aLocale = new Locale($arrLangCountry[0],$arrLangCountry[1]);
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
@@ -442,6 +445,21 @@ class LangTranslation extends ControlPanel
 		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 	}
 	
+	
+	public function displayTranslationLibrary()
+	{
+		$sSpath = $this->params['hiddenLangCountry'];
+		$nNumberRow=$this->params['hiddenSelectedPage'];
+		$selectedPage = $nNumberRow;
+		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSpath);
+		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage($sSpath, $arrSentenceLibrary);
+		
+		$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
+		$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$nNumberRow,$nPerPageRowNumber=20);
+		$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
+		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+		$this->viewLangTranslation->variables()->set('selectedPage',$selectedPage);
+	}
 	
 }
 

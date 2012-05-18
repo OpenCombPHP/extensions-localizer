@@ -1,4 +1,5 @@
 <lib name='jquery'/>
+<css src="localizer:css/LangTranslation.css" />
 <h1>语言翻译</h1>
 <form method="post">
 <div >
@@ -24,10 +25,20 @@
 		</foreach>
 	</foreach>
 	<div style="margin-left:45%"><input type="submit" value="提交"/></div>
+	<div id="page" style="width:50%">
 	<foreach for='$arrPage' key='page' item='numberRow'>
-		<a href="?c=org.opencomb.localizer.LangTranslation&spath={=$sLangCountry}&rownumber={=$numberRow}&selectpage=1">第{=$page}页</a>
+		<a id="page{=$numberRow}" href="?c=org.opencomb.localizer.LangTranslation&spath={=$sLangCountry}&rownumber={=$numberRow}&selectpage=1" class="page">第{=$page}页</a>
+		<if "{=$numberRow}=={=$selectedPage}">
+			<script >
+				var d = 'page'+ {=$selectedPage};
+				document.getElementById('page'+{=$selectedPage}).style.background="yellow";
+			</script>
+		</if>
 	</foreach>
+	</div>
 </div>
+<input type="hidden" name='hiddenSelectedPage' value="{=$selectedPage==0 ? 0 : $selectedPage}"/>
+<input type="hidden" name='hiddenLangCountry' value="{=$sLangCountry}"/>
 </form>
 <script>
 jquery(function(){
