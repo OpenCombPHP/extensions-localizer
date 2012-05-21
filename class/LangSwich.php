@@ -21,7 +21,8 @@ use org\jecat\framework\util\EventManager;
 
 class LangSwich extends ControlPanel
 {
-	const beforeRespond = 'beforeRespond' ;
+	const swichLang = 'swichLang' ;
+	
 	public function createBeanConfig()
 	{
 		$this->setCatchOutput(false) ;
@@ -40,13 +41,48 @@ class LangSwich extends ControlPanel
 	{
 		if($this->params['langnew'])
 		{
+			$sLangCountryNew = $this->params['langnew'];
+			$arrLangCountry = explode('_',$sLangCountryNew);
+			$sDpath = $sLangCountryNew;
+			$arrLang =LangSwich::langIterator();
+			$arrLang[$sDpath]['selected']=1;
+			
+			foreach($arrLang as $key=>$value)
+			{
+				if($key!=$sDpath)
+				{
+					$arrLang[$key]['selected']=0;
+				}else{
+					$arrLang[$key]['selected']=1;
+				}
+			
+			}
+			
+			$aSetting = Extension::flyweight('localizer')->setting();
+			$aSetting->deleteKey('/');
+			foreach($arrLang as $key=>$value)
+			{
+				$aSetting->setItem('/',$key,$value);
+			}
+			
+			Locale::switchSessionLocale($arrLangCountry[0],$arrLangCountry[1],true);
+			
 			// 触发事件
 			$aEventManager = EventManager::singleton() ;
 			$arrEventArgvs = array($this->params['langnew'],$this->params['langold'],$this->params['pageUrl']);
-			$aEventManager->emitEvent(__CLASS__,self::beforeRespond,$arrEventArgvs) ;
+			$aEventManager->emitEvent(__CLASS__,self::swichLang,$arrEventArgvs) ;
 			$sPageUrl = $this->params['pageUrl'];
-			echo $sPageUrl;
-			//$this::location($sPageUrl,2);
+			$this::location($sPageUrl,0);
 		};
+	}
+	
+	static function langIterator(){
+		$arrLang = array();
+		$aSetting = Extension::flyweight('localizer')->setting();
+		$aKey=$aSetting->key('/',true);
+		foreach($aKey->itemIterator() as $key=>$value){
+			$arrLang[$value]=$aKey->item($value,array());
+		}
+		return $arrLang;
 	}
 }

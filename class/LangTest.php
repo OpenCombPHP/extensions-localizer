@@ -1,5 +1,6 @@
 <?php
 namespace org\opencomb\localizer;
+use org\jecat\framework\verifier\Length;
 
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\Message;
@@ -16,29 +17,32 @@ use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
-use org\jecat\framework\locale\Locale;
 
-class LangSwichFront extends ControlPanel
+class LangTest extends ControlPanel
 {
 	public function createBeanConfig()
 	{
 		$this->setCatchOutput(false) ;
-		return array();
+		return array(
+			'title'=> '文章内容',
+			'view:langTest'=>array(
+				//'template'=>'LangTest.html',
+				'class'=>'form',
+				'widgets' => array(
+				),
+			),
+		);
 	}
-		
+	
 	public function process()
 	{	
+		
 
 	}
-		
-	public function langIterator()
-	{
-		$arrLang = array();
-		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
-		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLang[$value]=$aKey->item($value,array());
-		}
-		return $arrLang;
-	}
+	
+	
+	
+
 }
+
+?>

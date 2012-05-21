@@ -38,6 +38,7 @@ jquery(function(){
 	});
 });
 
+/*
 function defaultLang(country_lang){
 	jQuery.ajax({
 		url : "?c=org.opencomb.localizer.LangSelectDefault&dpath="+country_lang,
@@ -45,6 +46,11 @@ function defaultLang(country_lang){
 			location.reload() ;  //刷新页面直接看结果
 		}
 	});
+}
+*/
+
+function defaultLang(country_lang){
+	window.location.href='/?c=org.opencomb.localizer.LangSelectDefault&dpath=' + country_lang + '&pageUrl={/*.uri}';
 }
 
 function use(country_lang){

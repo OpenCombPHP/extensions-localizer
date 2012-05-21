@@ -42,32 +42,29 @@ class LangTranslation extends ControlPanel
 		$aLocale=Locale::singleton();
 		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
-		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);//var_dump($arrLangTranslationSelect);
+		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
 		$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
 		$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,0,$nPerPageRowNumber=20);
-		
+
 		$aSentenceBase=$aLocale->sentenceLibrary('base');
 		$aSentenceUi=$aLocale->sentenceLibrary('ui');
+		
 		$nTotal=0;
 		$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		$arrSentenceBase = include $sPathBaseLibrarySentence;
-		
-		
-		
+		$arrSentenceBase = array();
+		if(file_exists($sPathBaseLibrarySentence))
+		{	
+			$arrSentenceBase = include $sPathBaseLibrarySentence;
+		}
+
 		$aSentenceUi = $aLocale->sentenceLibrary('ui');
 		$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
 		$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-		$arrSentenceUi = include $sPathUiLibrarySentence;
-		
-		
-		foreach($arrSentenceBase as $keyHash=>$value)
-		{
-			$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['base'][$keyHash]=$value;
-		}
-		foreach($arrSentenceUi as $keyHash=>$value)
-		{
-			$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['ui'][$keyHash]=$value;
+		$arrSentenceUi = array();
+		if(file_exists($sPathUiLibrarySentence))
+		{		
+			$arrSentenceUi = include $sPathUiLibrarySentence;
 		}
 		
 		$nTotal = count($arrSentenceBase)+count($arrSentenceUi);
@@ -80,11 +77,11 @@ class LangTranslation extends ControlPanel
 			for($i=0;$i<$nPage;$i++)
 			{
 				$arrPage[$i+1]=$i*$nPerPageRowNumber;
-		}
-		$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+			}
+			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
 		}else if($nPage>0){
-		$arrPage[1]=0;
-		$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+			$arrPage[1]=0;
+			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
 		}
 		
 		$selectedPage = 0;
@@ -325,13 +322,21 @@ class LangTranslation extends ControlPanel
 		$aSentenceBase=$aLocale->sentenceLibrary('base');
 		$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		$arrSentenceBase = include $sPathBaseLibrarySentence;
+		$arrSentenceBase = array();
+		$arrSentenceUi = array();
+		if(file_exists($sPathBaseLibrarySentence))
+		{
+			$arrSentenceBase = include $sPathBaseLibrarySentence;
+		}
 		
 		$aSentenceUi = $aLocale->sentenceLibrary('ui');
 		$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
 		$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-		$arrSentenceUi = include $sPathUiLibrarySentence;
-		
+		if(file_exists($sPathUiLibrarySentence))
+		{	echo "ddd";
+			$arrSentenceUi = include $sPathUiLibrarySentence;
+		}
+
 		$arrSentenceLibrary['base'] = $arrSentenceBase;
 		$arrSentenceLibrary['ui'] = $arrSentenceUi;
 		return $arrSentenceLibrary;
@@ -401,14 +406,22 @@ class LangTranslation extends ControlPanel
 		$nTotal=0;
 		$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		$arrSentenceBase = include $sPathBaseLibrarySentence;
-		
-		
+		$arrSentenceBase = array();
+		if(file_exists($sPathBaseLibrarySentence))
+		{
+			$arrSentenceBase = include $sPathBaseLibrarySentence;
+		}
+
 		
 		$aSentenceUi = $aLocale->sentenceLibrary('ui');
 		$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
 		$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-		$arrSentenceUi = include $sPathUiLibrarySentence;
+		$arrSentenceUi = array();
+		if(file_exists($sPathUiLibrarySentence))
+		{
+			$arrSentenceUi = include $sPathUiLibrarySentence;
+		}
+			
 		
 		
 		foreach($arrSentenceBase as $keyHash=>$value)
@@ -430,13 +443,12 @@ class LangTranslation extends ControlPanel
 			for($i=0;$i<$nPage;$i++)
 			{
 				$arrPage[$i+1]=$i*$nPerPageRowNumber;
-		}
-		$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+			}
+			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
 		}else if($nPage>0){
-		$arrPage[1]=0;
-		$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+			$arrPage[1]=0;
+			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
 		}
-		
 		
 		$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
 		$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);

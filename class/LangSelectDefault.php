@@ -18,9 +18,11 @@ use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 use org\jecat\framework\setting\Setting;
+use org\jecat\framework\util\EventManager;
 
 class LangSelectDefault extends ControlPanel
 {
+	const selectDefault = 'selectDefault';
 	public function createBeanConfig()
 	{
 		$this->setCatchOutput(false) ;
@@ -31,6 +33,7 @@ class LangSelectDefault extends ControlPanel
 	{	
 		$arrLang=$this->langIterator();
 		$sDpath=$_GET['dpath'];
+		$sPageUrl = $_GET['pageUrl'];
 		$arrDpath = explode('_',$sDpath);
 		$arrLang[$sDpath]['selected']=1;
 
@@ -55,6 +58,12 @@ class LangSelectDefault extends ControlPanel
 		$aSettingSingle->deleteKey('service/local');
 		$aSettingSingle->setItem('service/locale','language',$arrDpath[0]);
 		$aSettingSingle->setItem('service/locale','language',$arrDpath[1]);
+		
+		//触发事件
+		$aEventManager = EventManager::singleton() ;
+		$arrEventArgvs = array($sDpath); var_dump($arrEventArgvs);//exit;
+		$aEventManager->emitEvent(__CLASS__,self::selectDefault,$arrEventArgvs) ;
+		$this->location($sPageUrl);
 		
 	}
 	
