@@ -333,7 +333,7 @@ class LangTranslation extends ControlPanel
 		$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
 		$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
 		if(file_exists($sPathUiLibrarySentence))
-		{	echo "ddd";
+		{	
 			$arrSentenceUi = include $sPathUiLibrarySentence;
 		}
 
