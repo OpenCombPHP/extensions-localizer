@@ -82,7 +82,7 @@ class LangSelect extends Widget {
 				$sSeletedLangCountry = $arrTemp['lang'].'_'.$arrTemp['country'];
 			}
 	
-		}echo $sSeletedLangCountry;
+		}
 		return $sSeletedLangCountry;
 	}
 	
