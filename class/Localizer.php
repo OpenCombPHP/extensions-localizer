@@ -65,8 +65,8 @@ class Localizer extends Extension
 		// 合并配置数组，增加菜单
 		$arrConfig['item:system']['item:platform-manage']['item:localizer'] = array(
 				'title'=> '本地化' ,
-				'link' => '?c=org.opencomb.localizer.LangTest' ,
-				'query' => 'c=org.opencomb.localizer.LangTest' ,
+				'link' => '?c=org.opencomb.localizer.LangSetting' ,
+				'query' => 'c=org.opencomb.localizer.LangSetting' ,
 				'menu' => 1,
 				'item:langsetting' => array(
 					'title' => '语言设定' ,

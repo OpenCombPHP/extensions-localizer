@@ -11,6 +11,7 @@ use org\jecat\framework\util\IHashTable;
 use org\jecat\framework\ui\UI;
 use org\jecat\framework\mvc\model\IModel;
 use org\jecat\framework\mvc\view\widget\Widget;
+use org\jecat\framework\setting\Setting;
 
 class LangSelect extends Widget {
 	public function __construct($aUserModel=null, $sId = '', $sTitle = null,  IView $aView = null) {
@@ -32,22 +33,56 @@ class LangSelect extends Widget {
 			{
 				$arrLang[$value]=$aKey->item($value,array());
 			}
-			
 		}
-		return $arrLang;
+		if(count($arrLang)){
+			return $arrLang;
+		}else{
+			$aSetting = Setting::singleton();
+			$sLanguage = $aSetting->item('service/locale','language',array());
+			$sCountry = $aSetting->item('service/locale','country',array());
+			if($aSetting->item('service/locale','title',array()))
+			{
+				$sTitle = $aSetting->item('service/locale','title',array());
+			}else{
+				$sTitle = "简体中文";
+			};
+			
+			$arrItem = array(
+					 'title'=>$sTitle
+					,'selected'=>1
+					,'country'=>$sCountry
+					,'lang'=>$sLanguage
+					,'used'=>'1'
+			);
+			
+			$aSettingLocalizer = Extension::flyweight('localizer')->setting();
+			$aSettingLocalizer->setItem('/',$sLanguage.'_'.$sCountry,$arrItem);
+			
+			$aKey=$aSettingLocalizer->key('/',true);
+			foreach($aKey->itemIterator() as $key=>$value)
+			{
+				$arrTemp=$aKey->item($value,array());
+				if($arrTemp['used']=='1')
+				{
+					$arrLang[$value]=$aKey->item($value,array());
+				}
+			}
+			return $arrLang;
+		}
 	}
 	
 	public function selectedLangCountry(){
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aKey=$aSetting->key('/',true);
-		foreach($aKey->itemIterator() as $key=>$value){
+		foreach($aKey->itemIterator() as $key=>$value)
+		{
 			$arrTemp=$aKey->item($value,array());
-			if($arrTemp['selected']=='1')
+			if($arrTemp['selected']==1)
 			{
 				$sSeletedLangCountry = $arrTemp['lang'].'_'.$arrTemp['country'];
 			}
 	
-		}
+		}echo $sSeletedLangCountry;
 		return $sSeletedLangCountry;
 	}
 	

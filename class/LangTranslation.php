@@ -136,7 +136,6 @@ class LangTranslation extends ControlPanel
 					$arrSentenceUi[$arrLangType[2]] = $value;
 				}
 			};
-			
 			file_put_contents($sPathBaseLibrarySentence,'<?php return'.' '.var_export($arrSentenceBase,true).';');
 			file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
 			$this->displayTranslationLibrary();
@@ -164,130 +163,7 @@ class LangTranslation extends ControlPanel
 			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 			$this->viewLangTranslation->variables()->set('selectedPage',$selectedPage);
 		}
-		
-		
-		
-		
-		//页面初始化
 
-		
-
-		
-		//第一版
-		/*
-		 $aLocale=Locale::singleton();
-		
-		$aSentenceBase=$aLocale->sentenceLibrary('base');
-		$aSentenceUi=$aLocale->sentenceLibrary('ui'); 
-		 
-		foreach($aSentenceBase->arrSentences() as $keyHash=>$value)
-		{	$nTotal++;
-			$arrLangTranslation[$aSentenceBase->language().'_'.$aSentenceBase->country()]['base'][$keyHash]=$value;
-		}
-		echo $nTotal;
-		foreach($aSentenceUi->arrSentences() as $keyHash=>$value)
-		{	$nTotal++;
-			$arrLangTranslation[$aSentenceUi->language().'_'.$aSentenceUi->country()]['ui'][$keyHash]=$value;
-		}
-		echo $nTotal++;
-		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslation);
-		$arrLang=$this->langIterator();
-		$this->viewLangTranslation->variables()->set('arrLang',$arrLang);
-		*/
-		
-		
-		
-		
-		
-		/*
-		
-		var_dump($arrLangTranslation);exit;
-		//$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
-		$sPathLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentencePkgFileName;
-		//$arrSentence = include $sPathLibrarySentence;
-		$arrSentence['5b18ddcd4ba10ba0e404e83f9fadaf26']= 'hahaha';
-		//var_dump($arrSentence);
-		//echo var_export($arrSentence,true);
-		file_put_contents($sPathLibrarySentence,'<?php return'.var_export($arrSentence,true));
-		exit;
-		$arrSentence = include 'home/qusong/oc.release/services/ooc/data/extensions/localizer/lang/aa_bb.base.php';
-		
-		var_dump($arrSentence);exit;
-		//$aSentenceBase= new SentenceLibrary('aa','bb','base');
-		//$aSentenceBase->setSentence('aaddf','12121211');
-		$arrNewSentences=$aSentenceBase->unarchiveSentences();
-		var_dump(var_export($arrNewSentences),true);
-		var_dump($aSentenceBase);
-		
-		*/
-		
-		/*对setting的操作
-		if($this->viewLangTranslation->isSubmit())
-		{
-			$aSetting = Extension::flyweight('localizer')->setting();
-			
-			foreach($this->params['Country_text'] as $key=>$value)
-			{
-				$aSetting->setItem('/tranlation/', $key, $value);
-			};
-		}
-		*/
-		
-		/*逆向操作
-		if($this->viewLangTranslation->isSubmit())
-		{
-			$aSetting = Extension::flyweight('localizer')->setting();
-		
-			foreach($this->params['Country_text'] as $key=>$value)
-			{
-				$aSentence->setSentence($key,$value);
-			};
-		}
-		*/
-		/*
-		$arrLang=$this->langIterator();
-		$arrLangTranslation=array();
-		foreach($arrLang as $keyLang=>$value)
-		{
-			$aLocale = new Locale($value['lang'],$value['country']);var_dump($aLocale);
-			$aSentenceBase=$aLocale->sentenceLibrary('base');var_dum					$aSentenceUi = $aLocale->sentenceLibrary('ui');
-					$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
-					$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-					$arrSentenceUi = include $sPathUiLibrarySentence;p($aSentenceBase);exit;
-			$aSentenceUi=$aLocale->sentenceLibrary('ui');
-			foreach($aSentenceBase->arrSentences() as $keyHash=>$value)
-			{
-				$arrLangTranslation[$keyLang]['base'][$keyHash]=$value;
-			}
-			
-			foreach($aSentenceUi->arrSentences() as $keyHash=>$value)
-			{
-				$arrLangTranslation[$keyLang]['ui'][$keyHash]=$value;
-			}	
-		}
-
-		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslation);
-		$this->viewLangTranslation->variables()->set('arrLang',$arrLang);
-		
-		if($this->viewLangTranslation->isSubmit())
-		{	
-			foreach($this->params['TranslationSentence'] as $key=>$value)
-			{
-				$arrLangType=explode('@',$key);
-				$aSetting = Extension::flyweight('localizer')->setting();
-				$aSetting->setItem('/translation/'.$arrLangType[0].'.'.$arrLangType[1], $arrLangType[2], $value);
-			}
-		}
-		
-		if($this->params['spath'])
-		{$nPerPageRowNumber
-			$sSpath=$this->params['spath'];
-			$arrLangTranslation=$this->langIteratorSelect($sSpath);
-			$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
-			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslation);
-		}
-		*/
-		
 	}
 	
 	public function getLangSelectMenu(){
@@ -459,7 +335,7 @@ class LangTranslation extends ControlPanel
 	
 	
 	public function displayTranslationLibrary()
-	{
+	{	
 		$sSpath = $this->params['hiddenLangCountry'];
 		$nNumberRow=$this->params['hiddenSelectedPage'];
 		$selectedPage = $nNumberRow;

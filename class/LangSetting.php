@@ -38,38 +38,7 @@ class LangSetting extends ControlPanel
 	
 	public function process()
 	{	
-// 		$sSQL = "show create table frameworktest_authora";
-// 		$aRecords = DB::singleton()->query($sSQL);
-// 		try{
-// 			$aRecords = DB::singleton()->query($sSQL);
-// 		}catch(Exception $e){
-// 			$b = false;
-// 		}
-// 		if(!$b){
-// 			echo "duile ";
-// 		}
-// 		exit;
-// 		$arrDesc = $aRecords->fetchAll();
-// 		$sCreate = $arrDesc[0]['Create Table'];
-// 		$ss=str_replace('frameworktest_author', 'frameworktest_author12', $sCreate);
-// 		var_dump($sCreate);
-// 		var_dump($ss);
-// 		DB::singleton()->execute($ss);
-		
-// 		$con = mysql_connect('192.168.1.1','root','1');var_dump($con);
-// 		$db_selected = mysql_select_db('www',$con);var_dump($db_selected);
-// 		$sSQL = "select * from opencms:article";
-// 		$result = mysql_query($sSQL,$con);
-// 		$property = mysql_fetch_field($result);
-// 		while($property)
-// 		{
-// 			echo $property->name;
-// 		}
-// 		var_dump($result);exit;
-		
-		
-		$arrLang=$this->langIterator();
-		$this->viewLangSetting->variables()->set('arrLang',$arrLang) ;
+
 		if($this->viewLangSetting->isSubmit())
 		{
 			//取得国家或者地区内容
@@ -167,8 +136,12 @@ class LangSetting extends ControlPanel
 					);
 				}	
 			}
-			
+			$arrLang=$this->langIterator();
+			$this->viewLangSetting->variables()->set('arrLang',$arrLang) ;
 		}
+		
+		$arrLang=$this->langIterator();
+		$this->viewLangSetting->variables()->set('arrLang',$arrLang) ;
 	}
 
 	public function langIterator(){

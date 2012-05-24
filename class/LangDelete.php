@@ -17,6 +17,7 @@ use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
+use org\jecat\framework\setting\Setting;
 
 class LangDelete extends ControlPanel
 {
@@ -38,24 +39,27 @@ class LangDelete extends ControlPanel
 	{	
 		$dPath=$this->params['dpath'];
 		$arrLang=$this->langIterator();
-		$fSelected=false;
+		$sUrl="?c=org.opencomb.localizer.LangSetting";
 		if($arrLang[$dPath]['selected']==1)
 		{
-			$fSelected=true;
+			$skey = "默认语言不能被删除";
+			$this->viewLangDelete->createMessage(Message::error,"%s",$skey) ;
+			$this->location($sUrl,0);
+			return;
 		}
-		//var_dump($arrLang);exit;
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aSetting->deleteItem('/', $dPath);
-		$arrNewLang=$this->langIterator();
-		$i=0;
-		foreach($arrNewLang as $key=>$value)
-		{
-			if($i==0)
-			{
-				$arrNewLang[$key]['selected']=1;
-			}
-			$i++;
-		}
+		$arrNewLang=$this->langIterator();var_dump($arrNewLang);
+// 		$i=0;
+// 		foreach($arrNewLang as $key=>$value)
+// 		{	
+// 			if($i==0)
+// 			{
+// 				$arrNewLang[$key]['selected']=1;
+// 			}
+// 			$i++;
+// 		}
+		
 		$aSetting->deleteKey('/');
 		foreach($arrNewLang as $key=>$value)
 		{
@@ -63,7 +67,7 @@ class LangDelete extends ControlPanel
 		}
 		
 		
-		$sUrl="?c=org.opencomb.localizer.LangSetting";
+		
 		$this->viewLangDelete->createMessage(Message::success,"%s ",$skey='删除成功');
 		$this->location($sUrl,0);
 		

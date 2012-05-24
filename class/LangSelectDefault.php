@@ -57,17 +57,19 @@ class LangSelectDefault extends ControlPanel
 		$aSettingSingle = Setting::singleton();
 		$aSettingSingle->deleteKey('service/local');
 		$aSettingSingle->setItem('service/locale','language',$arrDpath[0]);
-		$aSettingSingle->setItem('service/locale','language',$arrDpath[1]);
+		$aSettingSingle->setItem('service/locale','country',$arrDpath[1]);
+		$aSettingSingle->setItem('service/locale','title',$arrLang[$sDpath]['title']);
 		
 		//触发事件
 		$aEventManager = EventManager::singleton() ;
-		$arrEventArgvs = array($sDpath); var_dump($arrEventArgvs);//exit;
+		$arrEventArgvs = array($sDpath);
 		$aEventManager->emitEvent(__CLASS__,self::selectDefault,$arrEventArgvs) ;
 		$this->location($sPageUrl);
 		
 	}
 	
-	public function langIterator(){
+	public function langIterator()
+	{
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aKey=$aSetting->key('/',true);
