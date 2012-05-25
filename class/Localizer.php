@@ -62,6 +62,8 @@ class Localizer extends Extension
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
 	{
+		$aLocale=Locale::singleton();
+		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		// 合并配置数组，增加菜单
 		$arrConfig['item:system']['item:platform-manage']['item:localizer'] = array(
 				'title'=> '本地化' ,
@@ -75,7 +77,7 @@ class Localizer extends Extension
 				),
 				'item:translation' => array(
 					'title' => '语言翻译' ,
-					'link' => '?c=org.opencomb.localizer.LangTranslation' ,
+					'link' => '?c=org.opencomb.localizer.LangTranslation'.'&sSwichFrontLangPath='.$sLangCountry ,
 					'query' => 'c=org.opencomb.localizer.LangTranslation' ,
 				)
 				

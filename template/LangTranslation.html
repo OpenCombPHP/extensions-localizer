@@ -3,7 +3,7 @@
 <h1>语言翻译</h1>
 <form method="post">
 <div >
-	<select class='langselect'>
+	<select class='frontlangselect'>
 		<foreach for='$arrLangSelectMenu' key='country_lang' item='content'>
 			<if "{=$sSpath}!=null">
 				<option value="{=$country_lang}" {=$country_lang==$sSpath ? 'selected' : ''} >{=$content['title']}</option>	
@@ -13,50 +13,34 @@
 		</foreach>
 	</select>
 </div>
-	<br/><br/>
+	<br/>
+
 <div style="margin-left:50px">
-	<foreach for='$arrLangTranslation' key='country_lang' item='sentenceLibraries'>
-		<foreach for='$sentenceLibraries' key='type' item='sentenceLibrary'>
-			{=$type}语言包:<br/>
-			<foreach for='$sentenceLibrary' key='hash' item='value'>
-				<textarea name="TranslationSentence[{=$country_lang.'@'.$type.'@'.$hash}]" style="width:50%;height:5%">{=$value}</textarea><br/>
+	<if "{=$bFlag}">
+		<foreach for='$arrLangTranslation' key='country_lang' item='sentenceLibraries'>
+			<foreach for='$sentenceLibraries' key='type' item='sentenceLibrary'>
+				{=$type}语言包:<br/>
+				<foreach for='$sentenceLibrary' key='hash' item='value'>
+					<textarea name="TranslationSentence[{=$country_lang.'@'.$type.'@'.$hash}]" style="width:50%;height:5%">{=$value}</textarea><br/>
+				</foreach>
+				<br/>
 			</foreach>
-			<br/>
 		</foreach>
-	</foreach>
-	<div style="margin-left:45%"><input type="submit" value="提交"/></div>
+		<div style="margin-left:45%"><input type="submit" value="提交"/></div>
+	</if>
 	<div id="page" style="width:50%">
-	<foreach for='$arrPage' key='page' item='numberRow'>
-		<a id="page{=$numberRow}" href="?c=org.opencomb.localizer.LangTranslation&spath={=$sLangCountry}&rownumber={=$numberRow}&selectpage=1" class="page">第{=$page}页</a>
-		<if "{=$numberRow}=={=$selectedPage}">
-			<script >
-				var d = 'page'+ {=$selectedPage};
-				document.getElementById('page'+{=$selectedPage}).style.background="yellow";
-			</script>
-		</if>
-	</foreach>
+		<widget id="paginator" attr.strategy="middle" attr.showFirst="1" attr.showLast="1" attr.showTotal="1" attr.showPre="1" attr.showNext="1" />
 	</div>
 </div>
 <input type="hidden" name='hiddenSelectedPage' value="{=$selectedPage==0 ? 0 : $selectedPage}"/>
 <input type="hidden" name='hiddenLangCountry' value="{=$sLangCountry}"/>
 </form>
+
+
 <script>
 jquery(function(){
-	jquery('.langselect').change(function(){
-		window.location.href='/?c=org.opencomb.localizer.LangTranslation&spath=' + jquery(this).val();
+	jquery('.frontlangselect').change(function(){
+		window.location.href='/?c=org.opencomb.localizer.LangTranslation&sSwichFrontLangPath=' + jquery(this).val();
 	});
 });
-
-function swichlang(country_lang){
-	jQuery.ajax({
-		url : "?c=org.opencomb.localizer.LangSelectDefault&dpath="+country_lang,
-		success : function(){
-			location.reload() ;  //刷新页面直接看结果
-		}
-	});
-}
-
-function dd(){
-	document.getElementById("sec").innerHTML="ddd";
-}
 </script>

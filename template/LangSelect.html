@@ -1,6 +1,6 @@
 <lib name='jquery'/>
 <span class='dd'>
-		<select class='langselect'>
+		<select class='langSelectSwich'>
 			<foreach for='$theWidget->langIterator()' key='country_lang' item='content'>
 				<option value="{=$country_lang}" {=$content['selected']==1 ? 'selected' : ''}>{=$content['title']}</option>
 			</foreach>
@@ -8,8 +8,8 @@
 </span>
 <script>
 jquery(function(){
-	jquery('.langselect').change(function(){
-		window.location.href='/?c=org.opencomb.localizer.LangSwich&langnew=' + jquery(this).val()+'&pageUrl={/*.uri}'+'&langold={=$theWidget->selectedLangCountry()}';
+	jquery('.langSelectSwich').change(function(){
+		window.location.href='/?c=org.opencomb.localizer.LangSwich&langnew=' + jquery(this).val()+'&langold={=$theWidget->selectedLangCountry()}'+'&swichLangPageUrl={/*.url}';
 	});
 });
 </script>

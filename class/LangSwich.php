@@ -19,7 +19,7 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 use org\jecat\framework\locale\Locale;
 use org\jecat\framework\util\EventManager;
 
-class LangSwich extends ControlPanel
+class LangSwich extends Controller
 {
 	const swichLang = 'swichLang' ;
 	
@@ -29,10 +29,8 @@ class LangSwich extends ControlPanel
 		return array(
 // 			'title'=> '文章内容',
 // 			'view:langSwich'=>array(
-// 				'template'=>'langSwich.html',
-// 				'class'=>'form',
-// 				'widgets' => array(
-// 				),
+// 				'template'=>'org.opencomb.localizer.langSwich.html',
+// 				'class'=>'view',
 // 			),
 		);
 	}
@@ -69,10 +67,14 @@ class LangSwich extends ControlPanel
 			
 			// 触发事件
 			$aEventManager = EventManager::singleton() ;
-			$arrEventArgvs = array($this->params['langnew'],$this->params['langold'],$this->params['pageUrl']);
+			$arrEventArgvs = array($this->params['langnew'],$this->params['langold'],$this->params['swichLangPageUrl']);
 			$aEventManager->emitEvent(__CLASS__,self::swichLang,$arrEventArgvs) ;
-			$sPageUrl = $this->params['pageUrl'];
-			$this::location($sPageUrl,0);
+			$sPageUrl = $this->params['swichLangPageUrl'];
+// 			echo stripos('addc','c');
+// 			echo stripos($_SERVER['REQUEST_URI'],'&swichLangPageUrl');
+	
+			$iStart = stripos($_SERVER['REQUEST_URI'],'&swichLangPageUrl')+18;
+			$this->location(substr($_SERVER['REQUEST_URI'],$iStart),0);
 		};
 	}
 	

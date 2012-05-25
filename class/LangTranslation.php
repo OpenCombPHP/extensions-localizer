@@ -20,6 +20,7 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 use org\jecat\framework\locale\Locale;
 use org\jecat\framework\locale\SentenceLibrary;
 use org\jecat\framework\setting\Setting;
+use org\jecat\framework\mvc\view\widget\paginator\MockPaginal;
 
 class LangTranslation extends ControlPanel
 {
@@ -31,66 +32,133 @@ class LangTranslation extends ControlPanel
 			'view:langTranslation'=>array(
 				'template'=>'LangTranslation.html',
 				'class'=>'form',
-				'widgets' => array(
-				),
+				'widget:paginator' => array(
+							'class' => 'paginator' ,
+				) ,
 			),
 		);
 	}
 	
 	public function process()
 	{	
-		$aLocale=Locale::singleton();
+		
+		//$aLocale=Locale::singleton();
+		//if($this->params['sSwichFrontLangPath'])
+		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
+		$aLocale = Locale::flyweight($arrLangCountry[0], $arrLangCountry[1]);
 		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
-		$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
-		$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,0,$nPerPageRowNumber=20);
 
-		$aSentenceBase=$aLocale->sentenceLibrary('base');
-		$aSentenceUi=$aLocale->sentenceLibrary('ui');
-		
-		$nTotal=0;
-		$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
-		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		$arrSentenceBase = array();
-		if(file_exists($sPathBaseLibrarySentence))
-		{	
-			$arrSentenceBase = include $sPathBaseLibrarySentence;
-		}
-
-		$aSentenceUi = $aLocale->sentenceLibrary('ui');
-		$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
-		$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-		$arrSentenceUi = array();
-		if(file_exists($sPathUiLibrarySentence))
-		{		
-			$arrSentenceUi = include $sPathUiLibrarySentence;
-		}
-		
-		$nTotal = count($arrSentenceBase)+count($arrSentenceUi);
-		
-		$nPerPageRowNumber = 20;
-		$nPage = ceil($nTotal/$nPerPageRowNumber);
-		
-		if($nPage>1)
+			
+		if(count($arrLangTranslationSelect)==0)
 		{
-			for($i=0;$i<$nPage;$i++)
+			$bFlag = false;
+			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
+			
+			$aSentenceBase=$aLocale->sentenceLibrary('base');
+			$aSentenceUi=$aLocale->sentenceLibrary('ui');
+			
+			
+			$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
+			$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
+			$arrSentenceBase = array();
+			if(file_exists($sPathBaseLibrarySentence))
 			{
-				$arrPage[$i+1]=$i*$nPerPageRowNumber;
+				$arrSentenceBase = include $sPathBaseLibrarySentence;
 			}
-			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
-		}else if($nPage>0){
-			$arrPage[1]=0;
-			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
-		}
+			
+			$aSentenceUi = $aLocale->sentenceLibrary('ui');
+			$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
+			$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
+			$arrSentenceUi = array();
+			if(file_exists($sPathUiLibrarySentence))
+			{
+				$arrSentenceUi = include $sPathUiLibrarySentence;
+			}
+			
+			$nTotal = 0;
+			$nTotal = count($arrSentenceBase) + count($arrSentenceUi);
+			$nPerPageRowNumber = 20;
+			
+			$aMockPaginal = new MockPaginal();
+			$aMockPaginal->setTotalCount($nTotal);
+			
+			$this->viewLangTranslation->widget('paginator')->setPaginal($aMockPaginal);
+			$this->viewLangTranslation->widget('paginator')->setPerPageCount($nPerPageRowNumber);
+			
+			$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
+			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
 		
-		$selectedPage = 0;
-		$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
-		$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
-		$arrLangSelectMenu = $this->getLangSelectMenu();
-		$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
-		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
-		$this->viewLangTranslation->variables()->set('selectedPage',$selectedPage);
+		}else{
+			
+			$bFlag = true;
+			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
+			
+			$arrLangTranslationChunk = array();
+			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
+			$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,0,$nPerPageRowNumber=20);
+			
+			$aSentenceBase=$aLocale->sentenceLibrary('base');
+			$aSentenceUi=$aLocale->sentenceLibrary('ui');
+			
+			
+			$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
+			$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
+			$arrSentenceBase = array();
+			if(file_exists($sPathBaseLibrarySentence))
+			{
+				$arrSentenceBase = include $sPathBaseLibrarySentence;
+			}
+			
+			$aSentenceUi = $aLocale->sentenceLibrary('ui');
+			$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
+			$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
+			$arrSentenceUi = array();
+			if(file_exists($sPathUiLibrarySentence))
+			{
+				$arrSentenceUi = include $sPathUiLibrarySentence;
+			}
+			
+			$nTotal = 0;
+			$nTotal = count($arrSentenceBase) + count($arrSentenceUi);
+			$nPerPageRowNumber = 20;
+			
+			$aMockPaginal = new MockPaginal();
+			$aMockPaginal->setTotalCount($nTotal);
+			
+			$this->viewLangTranslation->widget('paginator')->setPaginal($aMockPaginal);
+			$this->viewLangTranslation->widget('paginator')->setPerPageCount($nPerPageRowNumber);
+			
+			
+			$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
+			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+		}
+			
+			
+		
+		
+		
+		//$nPage = ceil($nTotal/$nPerPageRowNumber);
+		
+// 		if($nPage>1)
+// 		{
+// 			for($i=0;$i<$nPage;$i++)
+// 			{
+// 				$arrPage[$i+1]=$i*$nPerPageRowNumber;
+// 			}
+// 			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+// 		}else if($nPage>0){
+// 			$arrPage[1]=0;
+// 			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+// 		}
+		
+
 		
 		//提交
 		if($this->viewLangTranslation->isSubmit())
@@ -142,26 +210,26 @@ class LangTranslation extends ControlPanel
 		}
 		
 		//选择语言
-		if($this->params['spath'])
+		if($this->params['sSwichFrontLangPath'])
 		{
-			$sSpath=$this->params['spath'];
+			
+			$sSpath=$this->params['sSwichFrontLangPath'];
 			$this->langSwichFront($sSpath);
 		}
 		
 		//翻页
-		if($this->params['selectpage'])
+		if($this->params['paginator'])
 		{
-			$sSpath=$this->params['spath'];
-			$nNumberRow = $this->params['rownumber'];
-			$selectedPage = $nNumberRow;
+			$iCurrentPageNum=$this->params['paginator'];
+			$sSpath = $this->params['sSwichFrontLangPath'];
 			$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSpath);
-			$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage($sSpath, $arrSentenceLibrary);
-			
+			$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage('', $arrSentenceLibrary);
+			$arrLangTranslationChunk = array();
 			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
-			$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$nNumberRow,$nPerPageRowNumber=20);
+			
+			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$iCurrentPageNum);
 			$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
 			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
-			$this->viewLangTranslation->variables()->set('selectedPage',$selectedPage);
 		}
 
 	}
@@ -200,6 +268,7 @@ class LangTranslation extends ControlPanel
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
 		$arrSentenceBase = array();
 		$arrSentenceUi = array();
+		$arrSentenceLibrary = array();
 		if(file_exists($sPathBaseLibrarySentence))
 		{
 			$arrSentenceBase = include $sPathBaseLibrarySentence;
@@ -236,7 +305,17 @@ class LangTranslation extends ControlPanel
 	
 	public function setSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$nNumberRow,$nPerPageRowNumber=20)
 	{
+		$arrLangTranslationNew = array();
 		foreach($arrLangTranslationChunk[$nNumberRow/$nPerPageRowNumber] as $key=>$value)
+		{
+			$arrLangTranslationNew[$sSpath][$value['type']][$value['hash']]=$value['value'];
+		}
+		return $arrLangTranslationNew;
+	}
+	
+	public function getSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$iCurrentPageNum)
+	{
+		foreach($arrLangTranslationChunk[$iCurrentPageNum-1] as $key=>$value)
 		{
 			$arrLangTranslationNew[$sSpath][$value['type']][$value['hash']]=$value['value'];
 		}
@@ -247,6 +326,7 @@ class LangTranslation extends ControlPanel
 	
 	public function setSelectSentenceLibraryPage($sSpath,$arrSentenceLibrary)
 	{
+		$arrLangTranslationSelect = array();
 		foreach($arrSentenceLibrary['base'] as $keyHash=>$value)
 		{
 			$arrLangTranslationSelect[]=array('type'=>'base','hash'=>$keyHash,'value'=>$value);
@@ -273,64 +353,131 @@ class LangTranslation extends ControlPanel
 		$arrLangCountry = explode('_',$sSpath);
 		$aLocale = new Locale($arrLangCountry[0],$arrLangCountry[1]);
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
-		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);//var_dump($arrLangTranslationSelect);
-		$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
-		$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,0,$nPerPageRowNumber=20);
 		
-		$aSentenceBase=$aLocale->sentenceLibrary('base');
-		$aSentenceUi=$aLocale->sentenceLibrary('ui');
-		$nTotal=0;
-		$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
-		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		$arrSentenceBase = array();
-		if(file_exists($sPathBaseLibrarySentence))
-		{
-			$arrSentenceBase = include $sPathBaseLibrarySentence;
-		}
 
 		
-		$aSentenceUi = $aLocale->sentenceLibrary('ui');
-		$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
-		$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-		$arrSentenceUi = array();
-		if(file_exists($sPathUiLibrarySentence))
-		{
-			$arrSentenceUi = include $sPathUiLibrarySentence;
-		}
+		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
 			
-		
-		
-		foreach($arrSentenceBase as $keyHash=>$value)
+		if(count($arrLangTranslationSelect)==0)
 		{
-			$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['base'][$keyHash]=$value;
-		}
-		foreach($arrSentenceUi as $keyHash=>$value)
-		{
-			$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['ui'][$keyHash]=$value;
-		}
+				$bFlag = false;
+				$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
+				
+				
+				$aSentenceBase=$aLocale->sentenceLibrary('base');
+				$aSentenceUi=$aLocale->sentenceLibrary('ui');
+				
+				$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
+				$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
+				
+				$arrSentenceBase = array();
+				if(file_exists($sPathBaseLibrarySentence))
+				{
+					$arrSentenceBase = include $sPathBaseLibrarySentence;
+				}
+				
+				
+				$aSentenceUi = $aLocale->sentenceLibrary('ui');
+				$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
+				$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
+				$arrSentenceUi = array();
+				if(file_exists($sPathUiLibrarySentence))
+				{
+					$arrSentenceUi = include $sPathUiLibrarySentence;
+				}
+				
+				
+				
+				foreach($arrSentenceBase as $keyHash=>$value)
+				{
+					$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['base'][$keyHash]=$value;
+				}
+				foreach($arrSentenceUi as $keyHash=>$value)
+				{
+					$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['ui'][$keyHash]=$value;
+				}
+				
+				
+				$nTotal = 0;
+				$nTotal = count($arrSentenceBase) + count($arrSentenceUi);
+				$nPerPageRowNumber = 20;
+				
+				$aMockPaginal = new MockPaginal();
+				$aMockPaginal->setTotalCount($nTotal);
+				
+				$this->viewLangTranslation->widget('paginator')->setPaginal($aMockPaginal);
+				$this->viewLangTranslation->widget('paginator')->setPerPageCount($nPerPageRowNumber);
+				
+				
+				$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
+				$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
+				$arrLangSelectMenu = $this->getLangSelectMenu();
+				$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+				
+			
+				
+		}else{
 		
-		$nTotal = count($arrSentenceBase)+count($arrSentenceUi);
-		
-		$nPerPageRowNumber = 20;
-		$nPage = ceil($nTotal/$nPerPageRowNumber);
-		
-		if($nPage>1)
-		{
-			for($i=0;$i<$nPage;$i++)
+			$bFlag = true;
+			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
+			
+			$arrLangTranslationChunk = array();
+			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
+			$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,0,$nPerPageRowNumber=20);
+			
+			$aSentenceBase=$aLocale->sentenceLibrary('base');
+			$aSentenceUi=$aLocale->sentenceLibrary('ui');
+			
+			$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
+			$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
+			
+			$arrSentenceBase = array();
+			if(file_exists($sPathBaseLibrarySentence))
 			{
-				$arrPage[$i+1]=$i*$nPerPageRowNumber;
+				$arrSentenceBase = include $sPathBaseLibrarySentence;
 			}
-			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
-		}else if($nPage>0){
-			$arrPage[1]=0;
-			$this->viewLangTranslation->variables()->set('arrPage',$arrPage);
+			
+			
+			$aSentenceUi = $aLocale->sentenceLibrary('ui');
+			$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
+			$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
+			$arrSentenceUi = array();
+			if(file_exists($sPathUiLibrarySentence))
+			{
+				$arrSentenceUi = include $sPathUiLibrarySentence;
+			}
+			
+			
+			
+			foreach($arrSentenceBase as $keyHash=>$value)
+			{
+				$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['base'][$keyHash]=$value;
+			}
+			foreach($arrSentenceUi as $keyHash=>$value)
+			{
+				$arrLangTranslation[$aLocale->language().'_'.$aLocale->country()]['ui'][$keyHash]=$value;
+			}
+			
+			
+			$nTotal = 0;
+			$nTotal = count($arrSentenceBase) + count($arrSentenceUi);
+			$nPerPageRowNumber = 20;
+			
+			$aMockPaginal = new MockPaginal();
+			$aMockPaginal->setTotalCount($nTotal);
+			
+			$this->viewLangTranslation->widget('paginator')->setPaginal($aMockPaginal);
+			$this->viewLangTranslation->widget('paginator')->setPerPageCount($nPerPageRowNumber);
+		
+			
+			$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
+			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+			
 		}
 		
-		$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
-		$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
-		$arrLangSelectMenu = $this->getLangSelectMenu();
-		$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
-		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 	}
 	
 	
@@ -341,7 +488,7 @@ class LangTranslation extends ControlPanel
 		$selectedPage = $nNumberRow;
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSpath);
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage($sSpath, $arrSentenceLibrary);
-		
+		$arrLangTranslationChunk = array();
 		$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
 		$arrLangTranslationNew = $this->setSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$nNumberRow,$nPerPageRowNumber=20);
 		$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
