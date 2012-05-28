@@ -12,9 +12,7 @@
 			<label>国家/地区:<font color="green">{=$content['country']}</font></label>&nbsp;&nbsp;&nbsp;
 			<label>语言:<font color="green">{=$content['lang']}</font></label>&nbsp;&nbsp;&nbsp;
 			<label>标题:<font color="green">{=$content['title']}</font></label>&nbsp;&nbsp;&nbsp;&nbsp;
-			<label><input type="checkbox" name="Use[]" {=$content['used']=='1' ? 'checked' :''} onclick="use('{=$country_lang}')"/>可用</label>		
-			<label><a href="?c=org.opencomb.localizer.LangUsed&dpath={=$country_lang}" >可用</a></label>		
-			
+			<label><input type="checkbox" name="Use[]" {=$content['used']=='1' ? 'checked' :''} onclick="use('{=$country_lang}')"/>可用</label>
 			<label><a href="?c=org.opencomb.localizer.LangDelete&dpath={=$country_lang}">删除</a></label>
 			<label><a href="?c=org.opencomb.localizer.LangSort&spath={=$country_lang}&sortTag=up">向上</a></label>
 			<label><a href="?c=org.opencomb.localizer.LangSort&spath={=$country_lang}&sortTag=down">向下</a></label>
@@ -29,7 +27,6 @@
 			<label>语言:<input type="text" size="5" name="Language_text[]" /></label>&nbsp;&nbsp;
 			<label>标题:<input type="text" size="15" name="Title_text[]" /></label>&nbsp;&nbsp;
 		</div>
-		
 			<a style="margin-left:300px;" id='addLang' href='#'>添加</a>
 			<span style="margin-left:15px;"><input type="submit" name="" value="保存" /></span>
 	
@@ -45,16 +42,6 @@ jquery(function(){
 	});
 });
 
-/*
-function defaultLang(country_lang){
-	jQuery.ajax({
-		url : "?c=org.opencomb.localizer.LangSelectDefault&dpath="+country_lang,
-		success : function(){
-			location.reload() ;  //刷新页面直接看结果
-		}
-	});
-}
-*/
 
 function defaultLang(country_lang){
 	window.location.href='/?c=org.opencomb.localizer.LangSelectDefault&dpath=' + country_lang + '&pageUrl={/*.uri}';
