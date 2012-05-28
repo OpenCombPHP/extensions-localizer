@@ -1,6 +1,7 @@
 <lib name='jquery'/>
 <css src="localizer:css/LangTranslation.css" />
 <h1>语言翻译</h1>
+<msgqueue/>
 <form method="post">
 <div >
 	<select class='frontlangselect'>
@@ -32,15 +33,13 @@
 		<widget id="paginator" attr.strategy="middle" attr.showFirst="1" attr.showLast="1" attr.showTotal="1" attr.showPre="1" attr.showNext="1" />
 	</div>
 </div>
-<input type="hidden" name='hiddenSelectedPage' value="{=$selectedPage==0 ? 0 : $selectedPage}"/>
-<input type="hidden" name='hiddenLangCountry' value="{=$sLangCountry}"/>
 </form>
 
 
 <script>
 jquery(function(){
 	jquery('.frontlangselect').change(function(){
-		window.location.href='/?c=org.opencomb.localizer.LangTranslation&sSwichFrontLangPath=' + jquery(this).val();
+		window.location.href='/?c=org.opencomb.localizer.LangTranslation&sSwichFrontLangPath=' + jquery(this).val()+'&type=swich';
 	});
 });
 </script>

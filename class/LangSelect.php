@@ -28,7 +28,8 @@ class LangSelect extends Widget {
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aKey=$aSetting->key('/',true);
-		foreach($aKey->itemIterator() as $key=>$value){
+		foreach($aKey->itemIterator() as $key=>$value)
+		{
 			$arrTemp=$aKey->item($value,array());
 			if($arrTemp['used']=='1')
 			{
@@ -72,7 +73,8 @@ class LangSelect extends Widget {
 		}
 	}
 	
-	public function selectedLangCountry(){
+	public function selectedLangCountry()
+	{
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aKey=$aSetting->key('/',true);
 		foreach($aKey->itemIterator() as $key=>$value)
