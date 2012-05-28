@@ -2,7 +2,7 @@
 <span class='dd'>
 		<select class='langSelectSwich'>
 			<foreach for='$theWidget->langIterator()' key='country_lang' item='content'>
-				<option value="{=$country_lang}" {=$content['selected']==1 ? 'selected' : ''}>{=$content['title']}</option>
+				<option value="{=$country_lang}" {=$theWidget->setCurrentLang()==$country_lang ? 'selected' : ''}>{=$content['title']}</option>
 			</foreach>
 		</select>
 </span>

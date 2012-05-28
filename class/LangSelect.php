@@ -12,6 +12,7 @@ use org\jecat\framework\ui\UI;
 use org\jecat\framework\mvc\model\IModel;
 use org\jecat\framework\mvc\view\widget\Widget;
 use org\jecat\framework\setting\Setting;
+use org\jecat\framework\locale\Locale;
 
 class LangSelect extends Widget {
 	public function __construct($aUserModel=null, $sId = '', $sTitle = null,  IView $aView = null) {
@@ -84,6 +85,13 @@ class LangSelect extends Widget {
 	
 		}
 		return $sSeletedLangCountry;
+	}
+	
+	public function setCurrentLang()
+	{
+		$aLocale = Locale::singleton();
+		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
+		return $sLangCountry;
 	}
 	
 }

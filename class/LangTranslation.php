@@ -46,6 +46,7 @@ class LangTranslation extends ControlPanel
 		//if($this->params['sSwichFrontLangPath'])
 		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
 		$aLocale = Locale::flyweight($arrLangCountry[0], $arrLangCountry[1]);
+		
 		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
