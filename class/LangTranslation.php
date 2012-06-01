@@ -20,7 +20,6 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 use org\jecat\framework\locale\Locale;
 use org\jecat\framework\locale\SentenceLibrary;
 use org\jecat\framework\setting\Setting;
-use org\jecat\framework\mvc\view\widget\paginator\PaginaltorTester;
 
 class LangTranslation extends ControlPanel
 {
@@ -77,7 +76,7 @@ class LangTranslation extends ControlPanel
 			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
 
 			
-			$this->setPaginatorTester($arrSentenceLibrary, $sLangCountry);
+			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
 			
 			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
 			$arrLangSelectMenu = $this->getLangSelectMenu();
@@ -251,7 +250,7 @@ class LangTranslation extends ControlPanel
 				$bFlag = false;
 				$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
 				
-				$this->setPaginatorTester($arrSentenceLibrary, $sLangCountry);
+				$this->setPaginator($arrSentenceLibrary, $sLangCountry);
 				
 				$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
 				$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
@@ -267,7 +266,7 @@ class LangTranslation extends ControlPanel
 			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
 			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
 			
-			$this->setPaginatorTester($arrSentenceLibrary, $sLangCountry);
+			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
 						
 			$this->viewLangTranslation->variables()->set('sLangCountry',$sLangCountry);
 			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
@@ -281,16 +280,13 @@ class LangTranslation extends ControlPanel
 	
 	
 	//设置分页器
-	public function setPaginatorTester($arrSentenceLibrary,$sLangCountry)
+	public function setPaginator($arrSentenceLibrary,$sLangCountry)
 	{
 		$nTotal = 0;
 		$nTotal = count($arrSentenceLibrary['base']) + count($arrSentenceLibrary['ui']);
 		$nPerPageRowNumber = 20;
 		
-		$aPaginaltorTester = new PaginaltorTester();
-		$aPaginaltorTester->setTotalCount($nTotal);
-		
-		$this->viewLangTranslation->widget('paginator')->setPaginal($aPaginaltorTester);
+		$this->viewLangTranslation->widget('paginator')->setTotalCount($nTotal);
 		$this->viewLangTranslation->widget('paginator')->setPerPageCount($nPerPageRowNumber);
 	}
 	
