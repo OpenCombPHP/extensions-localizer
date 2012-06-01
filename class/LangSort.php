@@ -97,7 +97,7 @@ class LangSort extends ControlPanel
 	{
 		$arrLangOption = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		$i=0;
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLangOption[$i++]=$value;
@@ -109,7 +109,7 @@ class LangSort extends ControlPanel
 	{
 		$arrDeleteUP = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		$i=0;
 		foreach($aKey->itemIterator() as $key=>$value)
 		{
@@ -127,7 +127,7 @@ class LangSort extends ControlPanel
 	{
 		$arrUp=array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value)
 		{
 			if($value==$sPathUp)
@@ -157,10 +157,10 @@ class LangSort extends ControlPanel
 	public function setItem($arrNewLang)
 	{
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aSetting->deleteKey('/');
+		$aSetting->deleteKey('/localizer');
 		foreach($arrNewLang as $key=>$value)
 		{
-			$aSetting->setItem('/',$key,$value);
+			$aSetting->setItem('/localizer',$key,$value);
 		}
 	}
 }

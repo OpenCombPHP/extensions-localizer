@@ -48,7 +48,7 @@ class LangDelete extends ControlPanel
 			return;
 		}
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aSetting->deleteItem('/', $dPath);
+		$aSetting->deleteItem('/localizer', $dPath);
 		$arrNewLang=$this->langIterator();var_dump($arrNewLang);
 // 		$i=0;
 // 		foreach($arrNewLang as $key=>$value)
@@ -60,10 +60,10 @@ class LangDelete extends ControlPanel
 // 			$i++;
 // 		}
 		
-		$aSetting->deleteKey('/');
+		$aSetting->deleteKey('/localizer');
 		foreach($arrNewLang as $key=>$value)
 		{
-			$aSetting->setItem('/',$key,$value);
+			$aSetting->setItem('/localizer',$key,$value);
 		}
 		
 		
@@ -76,7 +76,7 @@ class LangDelete extends ControlPanel
 	public function langIterator(){
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLang[$value]=$aKey->item($value,array());
 		}

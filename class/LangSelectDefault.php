@@ -49,10 +49,10 @@ class LangSelectDefault extends ControlPanel
 		}
 		
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aSetting->deleteKey('/');
+		$aSetting->deleteKey('/localizer');
 		foreach($arrLang as $key=>$value)
 		{
-			$aSetting->setItem('/',$key,$value);
+			$aSetting->setItem('/localizer',$key,$value);
 		}
 		$aSettingSingle = Setting::singleton();
 		$aSettingSingle->deleteKey('service/local');
@@ -72,7 +72,7 @@ class LangSelectDefault extends ControlPanel
 	{
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLang[$value]=$aKey->item($value,array());
 		}

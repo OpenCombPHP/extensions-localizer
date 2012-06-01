@@ -24,10 +24,11 @@ class LangSelect extends Widget {
 		parent::display($aUI, $aVariables,$aDevice);
 	}
 	
-	public function langIterator(){
+	public function langIterator()
+	{	
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value)
 		{
 			$arrTemp=$aKey->item($value,array());
@@ -58,9 +59,9 @@ class LangSelect extends Widget {
 			);
 			
 			$aSettingLocalizer = Extension::flyweight('localizer')->setting();
-			$aSettingLocalizer->setItem('/',$sLanguage.'_'.$sCountry,$arrItem);
+			$aSettingLocalizer->setItem('/localizer',$sLanguage.'_'.$sCountry,$arrItem);
 			
-			$aKey=$aSettingLocalizer->key('/',true);
+			$aKey=$aSettingLocalizer->key('/localizer',true);
 			foreach($aKey->itemIterator() as $key=>$value)
 			{
 				$arrTemp=$aKey->item($value,array());
@@ -76,7 +77,7 @@ class LangSelect extends Widget {
 	public function selectedLangCountry()
 	{
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value)
 		{
 			$arrTemp=$aKey->item($value,array());

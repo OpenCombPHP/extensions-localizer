@@ -57,21 +57,21 @@ class LangSwich extends Controller
 			}
 			
 			$aSetting = Extension::flyweight('localizer')->setting();
-			$aSetting->deleteKey('/');
+			$aSetting->deleteKey('/localizer');
 			foreach($arrLang as $key=>$value)
 			{
-				$aSetting->setItem('/',$key,$value);
+				$aSetting->setItem('/localizer',$key,$value);
 			}
 			
 			Locale::switchSessionLocale($arrLangCountry[0],$arrLangCountry[1],true);
 			
 			// 触发事件
-			$aEventManager = EventManager::singleton() ;
-			$arrEventArgvs = array($this->params['langnew'],$this->params['langold'],$this->params['swichLangPageUrl']);
-			$aEventManager->emitEvent(__CLASS__,self::swichLang,$arrEventArgvs) ;
+// 			$aEventManager = EventManager::singleton() ;
+// 			$arrEventArgvs = array($this->params['langnew'],$this->params['langold'],$this->params['swichLangPageUrl']);
+// 			$aEventManager->emitEvent(__CLASS__,self::swichLang,$arrEventArgvs) ;
 			$sPageUrl = $this->params['swichLangPageUrl'];
-// 			echo stripos('addc','c');
-// 			echo stripos($_SERVER['REQUEST_URI'],'&swichLangPageUrl');
+ 			//echo stripos('addc','c');
+ 			//echo stripos($_SERVER['REQUEST_URI'],'&swichLangPageUrl');
 	
 			$iStart = stripos($_SERVER['REQUEST_URI'],'&swichLangPageUrl')+18;
 			$this->location(substr($_SERVER['REQUEST_URI'],$iStart),0);
@@ -81,7 +81,7 @@ class LangSwich extends Controller
 	static function langIterator(){
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLang[$value]=$aKey->item($value,array());
 		}

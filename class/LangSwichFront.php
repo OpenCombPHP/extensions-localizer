@@ -35,7 +35,7 @@ class LangSwichFront extends ControlPanel
 	{
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLang[$value]=$aKey->item($value,array());
 		}

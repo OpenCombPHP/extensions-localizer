@@ -47,13 +47,13 @@ class LangUsed extends ControlPanel
 			$arrLang[$sDpath]['used']='1';
 		}
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aSetting->setItem('/',$sDpath,$arrLang[$sDpath]);
+		$aSetting->setItem('/localizer',$sDpath,$arrLang[$sDpath]);
 	}
 	
 	public function langIterator(){
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLang[$value]=$aKey->item($value,array());
 		}

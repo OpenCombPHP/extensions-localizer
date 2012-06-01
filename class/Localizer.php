@@ -88,6 +88,8 @@ class Localizer extends Extension
 	{
 		{
 			$aWeaveManager->registerFilter( 'coresystem:FrontFrame.html', "/div@0/p@0", array(__CLASS__,'filterForFrontFrameMergeIcon') ) ;
+			$aWeaveManager->registerFilter( 'coresystem:ControlPanelFrame.html', "/div@0/div@0/div@0", array(__CLASS__,'filterForFrontFrameMergeIcon') ) ;
+			
 		}
 	
 		// 将 mvc-merger 扩展提供的模板文件 merger/MergeIconMenu.html 做为补丁，应用到  coresystem 扩展的模板 FrontFrame.html 中的第一个<div>下的第一个<p> 内部的末尾

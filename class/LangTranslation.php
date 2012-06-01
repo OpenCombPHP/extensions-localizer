@@ -161,7 +161,7 @@ class LangTranslation extends ControlPanel
 	public function getLangSelectMenu()
 	{
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/',true);
+		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
 			$arrLangSelectMenu[$value]=$aKey->item($value,array());
 		}
