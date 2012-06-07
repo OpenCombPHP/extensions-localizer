@@ -3,8 +3,12 @@
 
 	<name>localizer</name>
 	<version>0.1</version>
-	<title>本地化</title>
+	<title>区域化</title>
 	
+	<description>
+用于支持蜂巢提供多语言、地区的服务。
+提供了一个语言/地区的切换菜单，以及语言包的翻译工具。
+	</description>
 
 	<class>org.opencomb.localizer.Localizer</class>
 	<package folder="/class" namespace="org.opencomb.localizer" />
