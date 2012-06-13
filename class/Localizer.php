@@ -47,6 +47,7 @@ class Localizer extends Extension
 				$sPakcagePath = $aFolder->path() . '/' . $aSentenceLib->packageFilename() ;
 				
 				$arrSentences = is_file($sPakcagePath)? include $sPakcagePath: array() ;
+				is_array($arrSentences) ? : $arrSentences = array(); 
 				$arrSentences = array_merge($arrSentences,$arrUnarchiveSentences) ;
 				
 				// 存入未归档语句
@@ -68,7 +69,7 @@ class Localizer extends Extension
 		$arrConfig['item:system']['item:platform-manage']['item:localizer'] = array(
 				'title'=> '本地化' ,
 				'link' => '?c=org.opencomb.localizer.LangSetting' ,
-				'query' => 'c=org.opencomb.localizer.LangSetting' ,
+				'query' => 'c=org.opencomb.localizer.LangSettingxx' ,
 				'menu' => 1,
 				'item:langsetting' => array(
 					'title' => '语言设定' ,

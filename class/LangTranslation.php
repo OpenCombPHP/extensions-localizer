@@ -1,5 +1,7 @@
 <?php
 namespace org\opencomb\localizer;
+use org\jecat\framework\mvc\view\UIFactory;
+
 use org\jecat\framework\verifier\Length;
 
 use org\jecat\framework\lang\Object;
@@ -27,7 +29,7 @@ class LangTranslation extends ControlPanel
 	{
 		$this->setCatchOutput(false) ;
 		return array(
-			'title'=> '文章内容',
+			'title'=> '本地化翻译',
 			'view:langTranslation'=>array(
 				'template'=>'LangTranslation.html',
 				'class'=>'form',
@@ -128,6 +130,7 @@ class LangTranslation extends ControlPanel
 					$arrSentenceUi[$arrLangType[2]] = $value;
 				}
 			};
+			echo UIFactory::singleton()->sourceFileManager()->compiledFolderPath();//exit;
 			file_put_contents($sPathBaseLibrarySentence,'<?php return'.' '.var_export($arrSentenceBase,true).';');
 			file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
 		}
@@ -177,12 +180,10 @@ class LangTranslation extends ControlPanel
 		$sSentenceBasePkgFileName = $aSentenceBase->packageFilename();
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
 		
-		$arrSentenceBase = array();
-		$arrSentenceUi = array();
 		$arrSentenceLibrary = array();
 		
 		if(file_exists($sPathBaseLibrarySentence))
-		{
+		{	
 			$arrSentenceBase = include $sPathBaseLibrarySentence;
 		}
 		
@@ -193,7 +194,17 @@ class LangTranslation extends ControlPanel
 		{	
 			$arrSentenceUi = include $sPathUiLibrarySentence;
 		}
-
+		
+		if(!is_array($arrSentenceBase))
+		{
+			$arrSentenceBase = array();
+		}
+		
+			if(!is_array($arrSentenceUi))
+		{
+			$arrSentenceUi = array();
+		}
+		
 		$arrSentenceLibrary['base'] = $arrSentenceBase;
 		$arrSentenceLibrary['ui'] = $arrSentenceUi;
 		
@@ -215,6 +226,7 @@ class LangTranslation extends ControlPanel
 	public function setSelectSentenceLibraryPage($sSpath,$arrSentenceLibrary)
 	{
 		$arrLangTranslationSelect = array();
+		//var_dump($arrSentenceLibrary);exit;
 		foreach($arrSentenceLibrary['base'] as $keyHash=>$value)
 		{
 			$arrLangTranslationSelect[]=array('type'=>'base','hash'=>$keyHash,'value'=>$value);

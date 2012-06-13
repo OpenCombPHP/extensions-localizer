@@ -17,37 +17,47 @@ use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
+use org\jecat\framework\locale\Locale;
 
 class LangUsed extends ControlPanel
 {
 	public function createBeanConfig()
 	{
 		$this->setCatchOutput(false) ;
-		return array(
-			'title'=> '文章内容',
-			'view:langUsed'=>array(
-				'template'=>'LangSetting.html',
-				'class'=>'form',
-				'widgets' => array(
-				),
-			),
-		);
+		return array();
 	}
 	
 	public function process()
 	{	
-		$arrLang=$this->langIterator();
-		$sDpath=$_GET['dpath'];
+		$arrLang = $this->langIterator();
+		$sDpath = $_GET['dpath'];
 		if($arrLang[$sDpath]['used']=="1")
-		{	
-			$arrLang[$sDpath]['used']='0';
+		{				
+			$aLocale = Locale::singleton();
+			$sComPath = $aLocale->localeName();
+			if($sDpath ==  $aLocale->language() . '_' . $aLocale->country())
+			{
+				$callback=$_GET['callback'];
+				$sS = "no";
+				$tmp = json_encode($sS);
+				echo $callback.'('.$tmp.')';
+				exit() ;
+			}else{
+				$arrLang[$sDpath]['used']='0';
+				$aSetting = Extension::flyweight('localizer')->setting();
+				$aSetting->setItem('/localizer',$sDpath,$arrLang[$sDpath]);
+				$callback=$_GET['callback'];
+				$sS = "yes";
+				$tmp = json_encode($sS);
+				echo $callback.'('.$tmp.')';
+				exit() ;
+			}
+			
+		}else{
+			$arrLang[$sDpath]['used']='1';		
+			$aSetting = Extension::flyweight('localizer')->setting();
+			$aSetting->setItem('/localizer',$sDpath,$arrLang[$sDpath]);
 		}
-		else
-		{
-			$arrLang[$sDpath]['used']='1';
-		}
-		$aSetting = Extension::flyweight('localizer')->setting();
-		$aSetting->setItem('/localizer',$sDpath,$arrLang[$sDpath]);
 	}
 	
 	public function langIterator(){

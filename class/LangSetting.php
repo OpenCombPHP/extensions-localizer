@@ -24,21 +24,19 @@ class LangSetting extends ControlPanel
 {
 	public function createBeanConfig()
 	{
+	
 		$this->setCatchOutput(false) ;
 		return array(
-			'title'=> '文章内容',
+			'title'=> '本地化设定',
 			'view:langSetting'=>array(
 				'template'=>'LangSetting.html',
 				'class'=>'form',
-				'widgets' => array(
-				),
 			),
-		);
+		);	
 	}
 	
 	public function process()
 	{	
-
 		if($this->viewLangSetting->isSubmit())
 		{
 			//取得国家或者地区内容
