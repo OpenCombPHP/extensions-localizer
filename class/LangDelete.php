@@ -37,10 +37,10 @@ class LangDelete extends ControlPanel
 	
 	public function process()
 	{	
-		$dPath=$this->params['dpath'];
-		$arrLang=$this->langIterator();
-		$sUrl="?c=org.opencomb.localizer.LangSetting";
-		if($arrLang[$dPath]['selected']==1)
+		$dPath = $this->params['dpath'];
+		$arrLang = $this->langIterator();
+		$sUrl = "?c=org.opencomb.localizer.LangSetting";
+		if($arrLang[$dPath]['selected'] == 1)
 		{
 			$skey = "默认语言不能被删除";
 			$this->viewLangDelete->createMessage(Message::error,"%s",$skey) ;
@@ -49,16 +49,7 @@ class LangDelete extends ControlPanel
 		}
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aSetting->deleteItem('/localizer', $dPath);
-		$arrNewLang=$this->langIterator();var_dump($arrNewLang);
-// 		$i=0;
-// 		foreach($arrNewLang as $key=>$value)
-// 		{	
-// 			if($i==0)
-// 			{
-// 				$arrNewLang[$key]['selected']=1;
-// 			}
-// 			$i++;
-// 		}
+		$arrNewLang = $this->langIterator();
 		
 		$aSetting->deleteKey('/localizer');
 		foreach($arrNewLang as $key=>$value)
@@ -66,10 +57,8 @@ class LangDelete extends ControlPanel
 			$aSetting->setItem('/localizer',$key,$value);
 		}
 		
-		
-		
 		$this->viewLangDelete->createMessage(Message::success,"%s ",$skey='删除成功');
-		$this->location($sUrl,0);
+		$this->location($sUrl,1);
 		
 	}
 	
@@ -78,7 +67,7 @@ class LangDelete extends ControlPanel
 		$aSetting = Extension::flyweight('localizer')->setting();
 		$aKey=$aSetting->key('/localizer',true);
 		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLang[$value]=$aKey->item($value,array());
+			$arrLang[$value] = $aKey->item($value,array());
 		}
 		return $arrLang;
 	}

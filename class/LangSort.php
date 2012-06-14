@@ -60,7 +60,7 @@ class LangSort extends ControlPanel
 			
 			$sUrl="?c=org.opencomb.localizer.LangSetting";
 			$this->viewlangSort->createMessage(Message::success,"%s ",$skey='向上移动成功');
-			$this->location($sUrl,0);
+			$this->location($sUrl,1);
 			
 		}else if($this->params['sortTag']=='down'){
 			$sPathUp=$this->params['spath'];
@@ -85,9 +85,8 @@ class LangSort extends ControlPanel
 			
 			$sUrl="?c=org.opencomb.localizer.LangSetting";
 			$this->viewlangSort->createMessage(Message::success,"%s ",$skey='向下移动成功');
-			$this->location($sUrl,0);
+			$this->location($sUrl,1);
 		}
-
 	}
 	
 	
