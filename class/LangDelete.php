@@ -21,19 +21,13 @@ use org\jecat\framework\setting\Setting;
 
 class LangDelete extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		$this->setCatchOutput(false) ;
-		return array(
-			'title'=> '文章内容',
-			'view:langDelete'=>array(
-				'template'=>'LangDelete.html',
-				'class'=>'form',
-				'widgets' => array(
-				),
-			),
-		);
-	}
+	protected $arrConfig = array(
+					'title'=> '文章内容',
+					'view'=>array(
+							'template'=>'LangDelete.html',
+							'class'=>'view',
+					),
+	);
 	
 	public function process()
 	{	
@@ -43,7 +37,7 @@ class LangDelete extends ControlPanel
 		if($arrLang[$dPath]['selected'] == 1)
 		{
 			$skey = "默认语言不能被删除";
-			$this->viewLangDelete->createMessage(Message::error,"%s",$skey) ;
+			$this->view->createMessage(Message::error,"%s",$skey) ;
 			$this->location($sUrl,0);
 			return;
 		}
@@ -57,7 +51,7 @@ class LangDelete extends ControlPanel
 			$aSetting->setItem('/localizer',$key,$value);
 		}
 		
-		$this->viewLangDelete->createMessage(Message::success,"%s ",$skey='删除成功');
+		$this->view->createMessage(Message::success,"%s ",$skey='删除成功');
 		$this->location($sUrl,1);
 		
 	}

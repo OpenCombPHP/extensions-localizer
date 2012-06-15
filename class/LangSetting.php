@@ -22,22 +22,24 @@ use org\jecat\framework\db\DB;
 
 class LangSetting extends ControlPanel
 {
-	public function createBeanConfig()
-	{
 	
-		$this->setCatchOutput(false) ;
-		return array(
+	protected $arrConfig = array(
 			'title'=> '本地化设定',
-			'view:langSetting'=>array(
-				'template'=>'LangSetting.html',
-				'class'=>'form',
+			'view'=>array(
+					'template'=>'LangSetting.html',
+					'class'=>'view',
 			),
-		);	
-	}
+	);
 	
 	public function process()
-	{	
-		if($this->viewLangSetting->isSubmit())
+	{
+		$arrLang=$this->langIterator();
+		$this->view->variables()->set('arrLang',$arrLang) ;
+	}	
+		
+	public function form()
+	{
+		if($this->view->isSubmit())
 		{
 			//取得国家或者地区内容
 			foreach($this->params['Country_text'] as $key=>$value)
@@ -45,7 +47,7 @@ class LangSetting extends ControlPanel
 				if(empty($value))
 				{
 					$skey="国家或者地区";
-					$this->viewLangSetting->createMessage(Message::error,"%s 请输入",$skey) ;
+					$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
 					return;
 				}
 				$arrCountry[]=$value;
@@ -57,7 +59,7 @@ class LangSetting extends ControlPanel
 				if(empty($value))
 				{
 					$skey="语言";
-					$this->viewLangSetting->createMessage(Message::error,"%s 请输入",$skey) ;
+					$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
 					return;
 				}
 				$arrLanguage[]=$value;
@@ -69,7 +71,7 @@ class LangSetting extends ControlPanel
 				if(empty($value))
 				{
 					$skey="标题";
-					$this->viewLangSetting->createMessage(Message::error,"%s 请输入",$skey) ;
+					$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
 					return;
 				}
 				$arrTitle[]=$value;
@@ -83,7 +85,7 @@ class LangSetting extends ControlPanel
 				if($aSetting->hasItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i]))
 				{
 					$skey="此语言";
-					$this->viewLangSetting->createMessage(Message::error,"%s 已存在",$skey) ;
+					$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
 					return;
 				}
 				
@@ -100,7 +102,7 @@ class LangSetting extends ControlPanel
 				if($bFlagTitle)
 				{
 					$skey="此标题";
-					$this->viewLangSetting->createMessage(Message::error,"%s 已存在",$skey) ;
+					$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
 					return;
 				}
 			}
@@ -135,11 +137,9 @@ class LangSetting extends ControlPanel
 				}	
 			}
 			$arrLang=$this->langIterator();
-			$this->viewLangSetting->variables()->set('arrLang',$arrLang) ;
+			$this->view->variables()->set('arrLang',$arrLang) ;
 		}
 		
-		$arrLang=$this->langIterator();
-		$this->viewLangSetting->variables()->set('arrLang',$arrLang) ;
 	}
 
 	public function langIterator(){

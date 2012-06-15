@@ -20,19 +20,13 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 
 class LangSort extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		$this->setCatchOutput(false) ;
-		return array(
+	protected $arrConfig = array(
 			'title'=> '文章内容',
 			'view:langSort'=>array(
-				'template'=>'LangSort.html',
-				'class'=>'form',
-				'widgets' => array(
-				),
+					'template'=>'LangSort.html',
+					'class'=>'view',
 			),
-		);
-	}
+	);
 	
 	public function process()
 	{	
