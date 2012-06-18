@@ -74,7 +74,7 @@ class LangSort extends ControlPanel
 				$this->location($sUrl,2);
 				return;
 			}
-			$iNumberDown=$iNumberUp+1;var_dump($arrLangOption);
+			$iNumberDown=$iNumberUp+1;
 			$sPathDown=$arrLangOption[$iNumberDown];
 			
 			$arrDeleteUP=$this->deleteUp($sPathUp);
