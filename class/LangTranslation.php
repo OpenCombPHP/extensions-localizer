@@ -42,49 +42,7 @@ class LangTranslation extends ControlPanel
 	
 	public function process()
 	{	
-		$arrLangCountry = array();
-		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
-		if(count($arrLangCountry)!=2)
-		{
-			$skey = '请选择一个默认语言';
-			$this->viewLangTranslation->createMessage(Message::error,"%s ",$skey) ;
-			$arrLangSelectMenu = $this->getLangSelectMenu();
-			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
-			return;
-		}
-		
-		$aLocale = Locale::flyweight($arrLangCountry[0], $arrLangCountry[1]);
-		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
-		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
-		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
 
-			
-		if(count($arrLangTranslationSelect)==0)
-		{
-			$bFlag = false;
-			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
-			
-			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
-			$arrLangSelectMenu = $this->getLangSelectMenu();
-			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
-		
-		}else{
-			
-			$bFlag = true;
-			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
-			
-			$arrLangTranslationChunk = array();
-			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
-			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
-
-			
-			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
-			
-			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
-			$arrLangSelectMenu = $this->getLangSelectMenu();
-			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
-			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
-		}
 		
 		//提交
 		if($this->viewLangTranslation->isSubmit())
@@ -130,7 +88,6 @@ class LangTranslation extends ControlPanel
 					$arrSentenceUi[$arrLangType[2]] = $value;
 				}
 			};
-			echo UIFactory::singleton()->sourceFileManager()->compiledFolderPath();//exit;
 			file_put_contents($sPathBaseLibrarySentence,'<?php return'.' '.var_export($arrSentenceBase,true).';');
 			file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
 		}
@@ -155,6 +112,51 @@ class LangTranslation extends ControlPanel
 			
 			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$iCurrentPageNum);
 			$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
+			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+		}
+		
+		
+		$arrLangCountry = array();
+		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
+		if(count($arrLangCountry)!=2)
+		{
+			$skey = '请选择一个默认语言';
+			$this->viewLangTranslation->createMessage(Message::error,"%s ",$skey) ;
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+			return;
+		}
+		
+		$aLocale = Locale::flyweight($arrLangCountry[0], $arrLangCountry[1]);
+		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
+		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
+		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
+		
+		
+		if(count($arrLangTranslationSelect)==0)
+		{
+			$bFlag = false;
+			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
+		
+			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+		
+		}else{
+		
+			$bFlag = true;
+			$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
+		
+			$arrLangTranslationChunk = array();
+			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
+			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
+		
+		
+			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
+		
+			$this->viewLangTranslation->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
 			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 		}
 
