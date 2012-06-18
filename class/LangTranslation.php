@@ -92,29 +92,6 @@ class LangTranslation extends ControlPanel
 			file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
 		}
 		
-		//选择语言
-		if($this->params['type'])
-		{
-			$sSpath=$this->params['sSwichFrontLangPath'];
-			$this->langSwichFront($sSpath);
-			
-		}
-		
-		//翻页
-		if($this->params['paginator'])
-		{	
-			$iCurrentPageNum = $this->params['paginator'];
-			$sSpath = $this->params['sSwichFrontLangPath'];
-			$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSpath);
-			$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage('', $arrSentenceLibrary);
-			$arrLangTranslationChunk = array();
-			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
-			
-			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$iCurrentPageNum);
-			$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
-			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
-		}
-		
 		
 		$arrLangCountry = array();
 		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
@@ -159,6 +136,32 @@ class LangTranslation extends ControlPanel
 			$this->viewLangTranslation->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
 			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 		}
+	
+		
+		//选择语言
+		if($this->params['type'])
+		{
+			$sSpath=$this->params['sSwichFrontLangPath'];
+			$this->langSwichFront($sSpath);
+			
+		}
+		
+		//翻页
+		if($this->params['paginator'])
+		{	
+			$iCurrentPageNum = $this->params['paginator'];
+			$sSpath = $this->params['sSwichFrontLangPath'];
+			$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSpath);
+			$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage('', $arrSentenceLibrary);
+			$arrLangTranslationChunk = array();
+			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
+			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sSpath, $arrLangTranslationChunk,$iCurrentPageNum);
+			$this->viewLangTranslation->variables()->set('sSpath',$sSpath);
+			$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+		}
+		
+		
+
 
 	}
 	
@@ -181,7 +184,8 @@ class LangTranslation extends ControlPanel
 		$aSentenceBase = $aLocale->sentenceLibrary('base');
 		$sSentenceBasePkgFileName = $aSentenceBase->packageFilename();
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		
+		$arrSentenceBase = '';
+		$arrSentenceUi = '';
 		$arrSentenceLibrary = array();
 		
 		if(file_exists($sPathBaseLibrarySentence))
@@ -228,7 +232,6 @@ class LangTranslation extends ControlPanel
 	public function setSelectSentenceLibraryPage($sSpath,$arrSentenceLibrary)
 	{
 		$arrLangTranslationSelect = array();
-		//var_dump($arrSentenceLibrary);exit;
 		foreach($arrSentenceLibrary['base'] as $keyHash=>$value)
 		{
 			$arrLangTranslationSelect[]=array('type'=>'base','hash'=>$keyHash,'value'=>$value);
@@ -256,11 +259,9 @@ class LangTranslation extends ControlPanel
 		$arrLangCountry = explode('_',$sSpath);
 		$aLocale = new Locale($arrLangCountry[0],$arrLangCountry[1]);
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
-		
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
-			
 		if(count($arrLangTranslationSelect)==0)
-		{
+		{	
 				$bFlag = false;
 				$this->viewLangTranslation->variables()->set('bFlag',$bFlag);
 				
