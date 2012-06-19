@@ -17,19 +17,14 @@ use org\jecat\framework\mvc\model\db\orm\Prototype;
 use org\jecat\framework\mvc\model\db\Model;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\util\EventManager;
+use org\opencomb\coresystem\mvc\controller\ControlPanel ;
 
 class Localizer extends Extension 
 {
 	public function load()
 	{
 		BeanFactory::singleton()->registerBeanClass("org\\opencomb\\localizer\\LangSelect",'langselect') ;
-		Menu::registerBuildHandle(
-				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
-				, 'frameView'
-				, 'mainMenu'
-				, array(__CLASS__,'buildControlPanelMenu')
-		) ;
-		// 注册语言包目录
+		ControlPanel::registerMenuHandler( array(__CLASS__,'buildControlPanelMenu') ) ;
 		LanguagePackageFolders::singleton()->registerFolder($this->unarchiveSentenceFolder()->path()) ;
 	}
 	
@@ -63,7 +58,7 @@ class Localizer extends Extension
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
 	{
-		$aLocale=Locale::singleton();
+		$aLocale = Locale::singleton();
 		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		// 合并配置数组，增加菜单
 		$arrConfig['item:system']['item:platform-manage']['item:localizer'] = array(
@@ -79,7 +74,7 @@ class Localizer extends Extension
 				'item:translation' => array(
 					'title' => '语言翻译' ,
 					'link' => '?c=org.opencomb.localizer.LangTranslation'.'&sSwichFrontLangPath='.$sLangCountry ,
-					'query' => 'c=org.opencomb.localizer.LangTranslation' ,
+					'query' => 'c=org.opencomb.localizer.LagetNewMenuTestngTranslation' ,
 				)
 				
 		);
