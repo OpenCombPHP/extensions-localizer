@@ -20,7 +20,7 @@ class LangSelect extends Widget {
 	}
 	
 	public function display(UI $aUI,IHashTable $aVariables=null,IOutputStream $aDevice=null)
-	{
+	{	
 		parent::display($aUI, $aVariables,$aDevice);
 	}
 	

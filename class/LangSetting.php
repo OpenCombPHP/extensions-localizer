@@ -33,113 +33,110 @@ class LangSetting extends ControlPanel
 	
 	public function process()
 	{
+		$this->doActions();
 		$arrLang=$this->langIterator();
 		$this->view->variables()->set('arrLang',$arrLang) ;
 	}	
 		
 	public function form()
 	{
-		if($this->view->isSubmit())
+		//取得国家或者地区内容
+		foreach($this->params['Country_text'] as $key=>$value)
 		{
-			//取得国家或者地区内容
-			foreach($this->params['Country_text'] as $key=>$value)
+			if(empty($value))
 			{
-				if(empty($value))
-				{
-					$skey="国家或者地区";
-					$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
-					return;
-				}
-				$arrCountry[]=$value;
-			};
+				$skey="国家或者地区";
+				$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
+				return;
+			}
+			$arrCountry[]=$value;
+		};
 
-			//取得语言内容
-			foreach($this->params['Language_text'] as $key=>$value)
+		//取得语言内容
+		foreach($this->params['Language_text'] as $key=>$value)
+		{
+			if(empty($value))
 			{
-				if(empty($value))
-				{
-					$skey="语言";
-					$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
-					return;
-				}
-				$arrLanguage[]=$value;
-			};
-			
-			//取得标题内容
-			foreach($this->params['Title_text'] as $key=>$value)
+				$skey="语言";
+				$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
+				return;
+			}
+			$arrLanguage[]=$value;
+		};
+		
+		//取得标题内容
+		foreach($this->params['Title_text'] as $key=>$value)
+		{
+			if(empty($value))
 			{
-				if(empty($value))
-				{
-					$skey="标题";
-					$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
-					return;
-				}
-				$arrTitle[]=$value;
-			};
-			
-			$aSetting = Extension::flyweight('localizer')->setting();
-			
-			//检测是否已存在语言
-			for($i=0;$i<count($this->params['Country_text']);$i++)
+				$skey="标题";
+				$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
+				return;
+			}
+			$arrTitle[]=$value;
+		};
+		
+		$aSetting = Extension::flyweight('localizer')->setting();
+		
+		//检测是否已存在语言
+		for($i=0;$i<count($this->params['Country_text']);$i++)
+		{
+			if($aSetting->hasItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i]))
 			{
-				if($aSetting->hasItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i]))
-				{
-					$skey="此语言";
-					$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
-					return;
-				}
-				
-				$bFlagTitle=false;
-				$arrLang=$this->langIterator();
-				foreach($arrLang as $key=>$value)
-				{
-					if($value['title']==$this->params['Title_text'][$i])
-					{
-						$bFlagTitle=true;
-					}
-				}
-				
-				if($bFlagTitle)
-				{
-					$skey="此标题";
-					$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
-					return;
-				}
+				$skey="此语言";
+				$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
+				return;
 			}
 			
-			$aKey = $aSetting->key('/localizer',true);
-			if(count($aKey->itemIterator())==0)
-			{
-				for($i=0;$i<count($this->params['Country_text']);$i++)
-				{
-					$aSetting->setItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
-							array('title'=>$this->params['Title_text'][$i]
-								  ,'selected'=>$i==0 ?1:0
-								  ,'country'=>$this->params['Country_text'][$i]
-								  ,'lang'=>$this->params['Language_text'][$i]
-								  ,'used'=>'1'
-							)
-							
-							
-						);
-				}
-			}else{
-				for($i=0;$i<count($this->params['Country_text']);$i++)
-				{
-					$aSetting->setItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
-							array('title'=>$this->params['Title_text'][$i]
-									,'selected'=>0
-									,'country'=>$this->params['Country_text'][$i]
-									,'lang'=>$this->params['Language_text'][$i]
-									,'used'=>'1'
-							)
-					);
-				}	
-			}
+			$bFlagTitle=false;
 			$arrLang=$this->langIterator();
-			$this->view->variables()->set('arrLang',$arrLang) ;
+			foreach($arrLang as $key=>$value)
+			{
+				if($value['title']==$this->params['Title_text'][$i])
+				{
+					$bFlagTitle=true;
+				}
+			}
+			
+			if($bFlagTitle)
+			{
+				$skey="此标题";
+				$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
+				return;
+			}
 		}
 		
+		$aKey = $aSetting->key('/localizer',true);
+		if(count($aKey->itemIterator())==0)
+		{
+			for($i=0;$i<count($this->params['Country_text']);$i++)
+			{
+				$aSetting->setItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
+						array('title'=>$this->params['Title_text'][$i]
+							  ,'selected'=>$i==0 ?1:0
+							  ,'country'=>$this->params['Country_text'][$i]
+							  ,'lang'=>$this->params['Language_text'][$i]
+							  ,'used'=>'1'
+						)
+						
+						
+					);
+			}
+		}else{
+			for($i=0;$i<count($this->params['Country_text']);$i++)
+			{
+				$aSetting->setItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
+						array('title'=>$this->params['Title_text'][$i]
+								,'selected'=>0
+								,'country'=>$this->params['Country_text'][$i]
+								,'lang'=>$this->params['Language_text'][$i]
+								,'used'=>'1'
+						)
+				);
+			}	
+		}
+		$arrLang=$this->langIterator();
+		$this->view->variables()->set('arrLang',$arrLang) ;
 	}
 
 	public function langIterator(){

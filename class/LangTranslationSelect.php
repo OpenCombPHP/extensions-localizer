@@ -28,11 +28,9 @@ class LangTranslationSelect extends ControlPanel
 	
 	public function process()
 	{	
-		
 		$sSpath=$_GET['spath'];
 		$arrLangTranslation=$this->langIterator($sSpath);
 		$this->viewLangTranslation->variables()->set('arrLangTranslation',$arrLangTranslation);
-		
 	}
 	
 	public function langIterator($sSpath){

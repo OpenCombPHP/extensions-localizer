@@ -24,6 +24,7 @@ class Localizer extends Extension
 	public function load()
 	{
 		BeanFactory::singleton()->registerBeanClass("org\\opencomb\\localizer\\LangSelect",'langselect') ;
+		//var_dump(BeanFactory::singleton());exit;
 		ControlPanel::registerMenuHandler( array(__CLASS__,'buildControlPanelMenu') ) ;
 		LanguagePackageFolders::singleton()->registerFolder($this->unarchiveSentenceFolder()->path()) ;
 	}
@@ -74,7 +75,7 @@ class Localizer extends Extension
 				'item:translation' => array(
 					'title' => '语言翻译' ,
 					'link' => '?c=org.opencomb.localizer.LangTranslation'.'&sSwichFrontLangPath='.$sLangCountry ,
-					'query' => 'c=org.opencomb.localizer.LagetNewMenuTestngTranslation' ,
+					'query' => 'c=org.opencomb.localizer.LangTranslation' ,
 				)
 				
 		);
@@ -89,8 +90,8 @@ class Localizer extends Extension
 		}
 	
 		// 将 mvc-merger 扩展提供的模板文件 merger/MergeIconMenu.html 做为补丁，应用到  coresystem 扩展的模板 FrontFrame.html 中的第一个<div>下的第一个<p> 内部的末尾
-		$aWeaveManager->registerCode( 'coresystem:FrontFrame.html', "/div@0/p@0", '<widget new=\'langselect\'/>', Patch::insertAfter ) ;
-		$aWeaveManager->registerCode( 'coresystem:ControlPanelFrame.html', "/div@0/div@0/div@0", '<widget new=\'langselect\'/>', Patch::insertAfter ) ;
+		$aWeaveManager->registerCode( 'coresystem:FrontFrame.html', "/div@0/p@0", '<widget type=\'langselect\'/>', Patch::insertAfter ) ;
+		$aWeaveManager->registerCode( 'coresystem:ControlPanelFrame.html', "/div@0/div@0/div@0", '<widget type=\'langselect\'/>', Patch::insertAfter ) ;
 		
 		// -------------------------------------------------
 		// 根据 setting 中保存的信息，应用模板补丁
