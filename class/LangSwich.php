@@ -23,17 +23,17 @@ class LangSwich extends Controller
 {
 	const swichLang = 'swichLang' ;
 	
-	public function createBeanConfig()
-	{
-		$this->setCatchOutput(false) ;
-		return array(
-// 			'title'=> '文章内容',
-// 			'view:langSwich'=>array(
-// 				'template'=>'org.opencomb.localizer.langSwich.html',
-// 				'class'=>'view',
-// 			),
-		);
-	}
+// 	public function createBeanConfig()
+// 	{
+// 		$this->setCatchOutput(false) ;
+// 		return array(
+// // 			'title'=> '文章内容',
+// // 			'view:langSwich'=>array(
+// // 				'template'=>'org.opencomb.localizer.langSwich.html',
+// // 				'class'=>'view',
+// // 			),
+// 		);
+// 	}
 	
 	public function process()
 	{

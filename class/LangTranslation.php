@@ -131,12 +131,15 @@ class LangTranslation extends ControlPanel
 				$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
 				$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
 				$arrSentenceBase = include $sPathBaseLibrarySentence;
+				$arrSentenceBase = is_array($arrSentenceBase) ? $arrSentenceBase : array();
+				
 	
 				//Ui
 				$aSentenceUi = $aLocale->sentenceLibrary('ui');
 				$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
 				$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
 				$arrSentenceUi = include $sPathUiLibrarySentence;
+				$arrSentenceUi = is_array($arrSentenceUi) ? $arrSentenceUi : array();
 			};
 			$i++;
 		}
