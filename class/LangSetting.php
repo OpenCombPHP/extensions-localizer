@@ -46,7 +46,7 @@ class LangSetting extends ControlPanel
 			if(empty($value))
 			{
 				$skey="国家或者地区";
-				$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
+				$this->createMessage(Message::error,"%s 请输入",$skey) ;
 				return;
 			}
 			$arrCountry[]=$value;
@@ -58,7 +58,7 @@ class LangSetting extends ControlPanel
 			if(empty($value))
 			{
 				$skey="语言";
-				$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
+				$this->createMessage(Message::error,"%s 请输入",$skey) ;
 				return;
 			}
 			$arrLanguage[]=$value;
@@ -70,7 +70,7 @@ class LangSetting extends ControlPanel
 			if(empty($value))
 			{
 				$skey="标题";
-				$this->view->createMessage(Message::error,"%s 请输入",$skey) ;
+				$this->createMessage(Message::error,"%s 请输入",$skey) ;
 				return;
 			}
 			$arrTitle[]=$value;
@@ -84,7 +84,7 @@ class LangSetting extends ControlPanel
 			if($aSetting->hasItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i]))
 			{
 				$skey="此语言";
-				$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
+				$this->createMessage(Message::error,"%s 已存在",$skey) ;
 				return;
 			}
 			
@@ -101,7 +101,7 @@ class LangSetting extends ControlPanel
 			if($bFlagTitle)
 			{
 				$skey="此标题";
-				$this->view->createMessage(Message::error,"%s 已存在",$skey) ;
+				$this->createMessage(Message::error,"%s 已存在",$skey) ;
 				return;
 			}
 		}

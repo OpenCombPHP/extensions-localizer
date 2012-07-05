@@ -46,7 +46,7 @@ class LangTranslation extends ControlPanel
 		if(count($arrLangCountry)!=2)
 		{
 			$skey = '请选择一个默认语言';
-			$this->view->createMessage(Message::error,"%s ",$skey) ;
+			$this->createMessage(Message::error,"%s ",$skey) ;
 			$arrLangSelectMenu = $this->getLangSelectMenu();
 			$this->view->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
 			return;

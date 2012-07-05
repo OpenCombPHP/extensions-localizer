@@ -37,7 +37,7 @@ class LangDelete extends ControlPanel
 		if($arrLang[$dPath]['selected'] == 1)
 		{
 			$skey = "默认语言不能被删除";
-			$this->view->createMessage(Message::error,"%s",$skey) ;
+			$this->createMessage(Message::error,"%s",$skey) ;
 			$this->location($sUrl,0);
 			return;
 		}
@@ -51,7 +51,7 @@ class LangDelete extends ControlPanel
 			$aSetting->setItem('/localizer',$key,$value);
 		}
 		
-		$this->view->createMessage(Message::success,"%s ",$skey='删除成功');
+		$this->createMessage(Message::success,"%s ",$skey='删除成功');
 		$this->location($sUrl,1);
 		
 	}
