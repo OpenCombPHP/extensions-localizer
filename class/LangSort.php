@@ -22,7 +22,7 @@ class LangSort extends ControlPanel
 {
 	protected $arrConfig = array(
 			'title'=> '文章内容',
-			'view:langSort'=>array(
+			'view'=>array(
 					'template'=>'LangSort.html',
 					'class'=>'view',
 			),
@@ -38,9 +38,9 @@ class LangSort extends ControlPanel
 			if($iNumberDown==0)
 			{
 				$skey="不可以向上";
-				$this->viewlangSort->createMessage(Message::error,"%s 移动",$skey) ;
+				$this->createMessage(Message::error,"%s 移动",$skey) ;
 				$sUrl="?c=org.opencomb.localizer.LangSetting";
-				$this->location($sUrl,2);
+				$this->location($sUrl);
 				return;
 			}
 			$iNumberUp=$iNumberDown-1;
@@ -53,8 +53,8 @@ class LangSort extends ControlPanel
 			
 			
 			$sUrl="?c=org.opencomb.localizer.LangSetting";
-			$this->viewlangSort->createMessage(Message::success,"%s ",$skey='向上移动成功');
-			$this->location($sUrl,1);
+			$this->createMessage(Message::success,"%s ",$skey='向上移动成功');
+			$this->location($sUrl);
 			
 		}else if($this->params['sortTag']=='down'){
 			$sPathUp=$this->params['spath'];
@@ -63,12 +63,12 @@ class LangSort extends ControlPanel
 			if($iNumberUp+1==count($arrLangOption))
 			{
 				$skey="不可以向下";
-				$this->viewlangSort->createMessage(Message::error,"%s 移动",$skey) ;
+				$this->createMessage(Message::error,"%s 移动",$skey) ;
 				$sUrl="?c=org.opencomb.localizer.LangSetting";
-				$this->location($sUrl,2);
+				$this->location($sUrl);
 				return;
 			}
-			$iNumberDown=$iNumberUp+1;var_dump($arrLangOption);
+			$iNumberDown=$iNumberUp+1;
 			$sPathDown=$arrLangOption[$iNumberDown];
 			
 			$arrDeleteUP=$this->deleteUp($sPathUp);
@@ -78,8 +78,8 @@ class LangSort extends ControlPanel
 			
 			
 			$sUrl="?c=org.opencomb.localizer.LangSetting";
-			$this->viewlangSort->createMessage(Message::success,"%s ",$skey='向下移动成功');
-			$this->location($sUrl,1);
+			$this->createMessage(Message::success,"%s ",$skey='向下移动成功');
+			$this->location($sUrl);
 		}
 	}
 	

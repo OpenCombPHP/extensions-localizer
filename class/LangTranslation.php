@@ -180,8 +180,8 @@ class LangTranslation extends ControlPanel
 		$aSentenceBase = $aLocale->sentenceLibrary('base');
 		$sSentenceBasePkgFileName = $aSentenceBase->packageFilename();
 		$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-		$arrSentenceBase = '';
-		$arrSentenceUi = '';
+		$arrSentenceBase = array();
+		$arrSentenceUi = array();
 		$arrSentenceLibrary = array();
 
 		if(file_exists($sPathBaseLibrarySentence))
