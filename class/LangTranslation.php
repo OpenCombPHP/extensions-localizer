@@ -130,7 +130,7 @@ class LangTranslation extends ControlPanel
 				$aSentenceBase=$aLocale->sentenceLibrary('base');
 				$sSentenceBasePkgFileName=$aSentenceBase->packageFilename();
 				$sPathBaseLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceBasePkgFileName;
-				$arrSentenceBase = include $sPathBaseLibrarySentence;
+				$arrSentenceBase = is_file($sPathBaseLibrarySentence) ? include $sPathBaseLibrarySentence : array() ;
 				$arrSentenceBase = is_array($arrSentenceBase) ? $arrSentenceBase : array();
 				
 	
@@ -138,7 +138,7 @@ class LangTranslation extends ControlPanel
 				$aSentenceUi = $aLocale->sentenceLibrary('ui');
 				$sSentenceUiPkgFileName = $aSentenceUi->packageFilename();
 				$sPathUiLibrarySentence = Extension::flyweight('localizer')->unarchiveSentenceFolder()->path().'/'.$sSentenceUiPkgFileName;
-				$arrSentenceUi = include $sPathUiLibrarySentence;
+				$arrSentenceUi = is_file($sPathUiLibrarySentence) ? include $sPathUiLibrarySentence : array() ;
 				$arrSentenceUi = is_array($arrSentenceUi) ? $arrSentenceUi : array();
 			};
 			$i++;
@@ -159,7 +159,7 @@ class LangTranslation extends ControlPanel
 		file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
 		$sTranslationFilePath = UIFactory::singleton()->sourceFileManager()->compiledFolderPath();
 		$this->deldir($sTranslationFilePath);
-	
+		
 		//rmdir($sTranslationFilePath);
 	}
 	
