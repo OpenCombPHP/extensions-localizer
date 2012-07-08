@@ -157,6 +157,10 @@ class LangTranslation extends ControlPanel
 		};
 		file_put_contents($sPathBaseLibrarySentence,'<?php return'.' '.var_export($arrSentenceBase,true).';');
 		file_put_contents($sPathUiLibrarySentence,'<?php return'.' '.var_export($arrSentenceUi,true).';');
+		$sTranslationFilePath = UIFactory::singleton()->sourceFileManager()->compiledFolderPath();
+		$this->deldir($sTranslationFilePath);
+	
+		//rmdir($sTranslationFilePath);
 	}
 	
 	
@@ -299,6 +303,49 @@ class LangTranslation extends ControlPanel
 
 		$this->view->widget('paginator')->setTotalCount($nTotal);
 		$this->view->widget('paginator')->setPerPageCount($nPerPageRowNumber);
+	}
+	
+	public function deldir($dir) {
+	
+		//先删除目录下的文件：
+	
+		$dh=opendir($dir);
+	
+		while ($file=readdir($dh)) {
+	
+			if($file!="." && $file!="..") {
+	
+				$fullpath=$dir."/".$file;
+	
+				if(!is_dir($fullpath)) {
+	
+					unlink($fullpath);
+	
+				} else {
+	
+					$this->deldir($fullpath);
+	
+				}
+	
+			}
+	
+		}
+	
+	
+		closedir($dh);
+	
+		//删除当前文件夹：
+	
+		if(rmdir($dir)) {
+	
+			return true;
+	
+		} else {
+	
+			return false;
+	
+		}
+	
 	}
 
 }
