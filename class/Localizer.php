@@ -74,7 +74,10 @@ class Localizer extends Extension
 				'item:translation' => array(
 					'title' => '语言翻译' ,
 					'link' => '?c=org.opencomb.localizer.LangTranslation'.'&sSwichFrontLangPath='.$sLangCountry ,
-					'query' => 'c=org.opencomb.localizer.LangTranslation' ,
+					'query' => array(
+								'c=org.opencomb.localizer.LangTranslation'
+							   ,'c=org.opencomb.localizer.LangSearchKey'
+					)
 				)
 		);
 	}

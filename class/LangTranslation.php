@@ -40,7 +40,7 @@ class LangTranslation extends ControlPanel
 	public function process()
 	{
 		
-		
+	
 		$arrLangCountry = array();
 		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
 		if(count($arrLangCountry)!=2)
@@ -57,7 +57,6 @@ class LangTranslation extends ControlPanel
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
 		$this->view->variables()->set('hidelangcountry', $this->params['sSwichFrontLangPath']);
-	
 	
 		if(count($arrLangTranslationSelect)==0)
 		{
@@ -86,7 +85,7 @@ class LangTranslation extends ControlPanel
 			$this->view->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 		}
 	
-		$this->doActions();
+		
 		//选择语言
 		if($this->params['type'])
 		{
@@ -108,6 +107,8 @@ class LangTranslation extends ControlPanel
 			$this->view->variables()->set('sSpath',$sSpath);
 			$this->view->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 		}
+		
+		$this->doActions();
 	}
 	
 	public function form()
@@ -174,7 +175,7 @@ class LangTranslation extends ControlPanel
 			return;
 		}
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSearchLangCountry);
-		$arrSentenceLibrarySeach = $this->searchKey($arrSentenceLibrary,$sSearchKey);
+		$arrSentenceLibrarySeach = $this->searchKey($arrSentenceLibrary,$sSearchKey);//var_dump($arrSentenceLibrarySeach);exit;
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrarySeach);
 		$this->view->variables()->set('hidelangcountry', $this->params['sSwichFrontLangPath']);
 		
@@ -199,7 +200,7 @@ class LangTranslation extends ControlPanel
 			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
 		
 		
-			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
+			$this->setPaginator($arrSentenceLibrarySeach, $sLangCountry);
 		
 			$this->view->variables()->set('sSpath',$sLangCountry);
 			$arrLangSelectMenu = $this->getLangSelectMenu();
