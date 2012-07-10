@@ -39,7 +39,7 @@ class LangTranslation extends ControlPanel
 	
 	public function process()
 	{
-		$this->doActions();
+		
 		
 		$arrLangCountry = array();
 		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
@@ -56,6 +56,7 @@ class LangTranslation extends ControlPanel
 		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sLangCountry);
 		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrary);
+		$this->view->variables()->set('hidelangcountry', $this->params['sSwichFrontLangPath']);
 	
 	
 		if(count($arrLangTranslationSelect)==0)
@@ -85,13 +86,13 @@ class LangTranslation extends ControlPanel
 			$this->view->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 		}
 	
-	
+		$this->doActions();
 		//选择语言
 		if($this->params['type'])
 		{
-			$sSpath=$this->params['sSwichFrontLangPath'];
+			$sSpath = $this->params['sSwichFrontLangPath'];
 			$this->langSwichFront($sSpath);
-	
+			$this->view->variables()->set('hidelangcountry', $sSpath);
 		}
 	
 		//翻页
@@ -161,6 +162,52 @@ class LangTranslation extends ControlPanel
 		$this->deldir($sTranslationFilePath);
 		
 		//rmdir($sTranslationFilePath);
+	}
+	
+	public function formsearch()
+	{
+		$sSearchLangCountry = $this->params['hidden_lang_country'];
+		$sSearchKey = $this->params['search_key'];
+		if(empty($sSearchKey))
+		{
+			$this->createMessage(Message::error,"%s",$key="请输入搜索内容");
+			return;
+		}
+		$arrSentenceLibrary = $this->getSelectSentenceLibrary($sSearchLangCountry);
+		$arrSentenceLibrarySeach = $this->searchKey($arrSentenceLibrary,$sSearchKey);
+		$arrLangTranslationSelect = $this->setSelectSentenceLibraryPage(null,$arrSentenceLibrarySeach);
+		$this->view->variables()->set('hidelangcountry', $this->params['sSwichFrontLangPath']);
+		
+		$sLangCountry = $sSearchLangCountry;
+		if(count($arrLangTranslationSelect)==0)
+		{
+			$bFlag = false;
+			$this->view->variables()->set('bFlag',$bFlag);
+		
+			$this->view->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->view->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+			$this->view->variables()->set('bFlagSearch',true);
+		
+		}else{
+		
+			$bFlag = true;
+			$this->view->variables()->set('bFlag',$bFlag);
+		
+			$arrLangTranslationChunk = array();
+			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
+			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
+		
+		
+			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
+		
+			$this->view->variables()->set('sSpath',$sLangCountry);
+			$arrLangSelectMenu = $this->getLangSelectMenu();
+			$this->view->variables()->set('arrLangSelectMenu',$arrLangSelectMenu);
+			$this->view->variables()->set('arrLangTranslation',$arrLangTranslationNew);
+		}
+		
+		
 	}
 	
 	
@@ -291,6 +338,32 @@ class LangTranslation extends ControlPanel
 
 		}
 
+	}
+	
+	public function searchKey($arrSentenceLibrary,$sSearchKey)
+	{
+		$arrSentenceLibrarySeach = array();
+		foreach($arrSentenceLibrary as $key=>$arrSentence)
+		{
+			foreach($arrSentence as $hash=>$content)
+			{
+				if(substr_count($content,$sSearchKey))
+				{
+					$arrSentenceLibrarySeach[$key][$hash] = $content;
+				}
+			}
+		}
+		
+		if(!array_key_exists('base',$arrSentenceLibrarySeach))
+		{
+			$arrSentenceLibrarySeach['base'] = array();
+		}
+		
+		if(!array_key_exists('ui',$arrSentenceLibrarySeach))
+		{
+			$arrSentenceLibrarySeach['ui'] = array();
+		}
+		return $arrSentenceLibrarySeach;
 	}
 
 

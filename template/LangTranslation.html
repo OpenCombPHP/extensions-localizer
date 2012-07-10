@@ -2,8 +2,8 @@
 <css src="localizer:css/LangTranslation.css" />
 <h1>语言翻译</h1>
 <msgqueue/>
-<form method="post">
-<div >
+<form method="post" >
+<div>
 	<select class='frontlangselect'>
 		<foreach for='$arrLangSelectMenu' key='country_lang' item='content'>
 			<if "{=$sSpath}!=null">
@@ -29,12 +29,26 @@
 		</foreach>
 		<div style="margin-left:45%"><input type="submit" value="提交"/></div>
 	</if>
+	<div>
+	<if "{=$bFlagSearch}">
+		<h1>没有搜索到相关内容</h1>
+	</if>
+</div>
 	<div id="page" style="width:50%">
 		<widget id="paginator" attr.strategy="middle" attr.showFirst="1" attr.showLast="1" attr.showTotal="1" attr.showPre="1" attr.showNext="1" />
 	</div>
 </div>
 </form>
 
+<div style="position:absolute; left:120px;top:50px">
+	<form method="post" name="formsearch">
+		<div style="margin-left:190px">
+			<input type="text" name="search_key" size="50px"/>
+			<input type="hidden" name="hidden_lang_country" value="{=$hidelangcountry}" />
+			<input type="submit" value="搜索" />
+		</div>
+	</form>
+</div>
 
 <script>
 jquery(function(){
