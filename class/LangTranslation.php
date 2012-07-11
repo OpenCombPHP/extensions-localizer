@@ -76,7 +76,6 @@ class LangTranslation extends ControlPanel
 			$arrLangTranslationChunk = $this->getLangChunk($arrLangTranslationSelect,$nPerPageRowNumber=20);
 			$arrLangTranslationNew = $this->getSelectSentenceLibraryNew($sLangCountry, $arrLangTranslationChunk,1);
 	
-	
 			$this->setPaginator($arrSentenceLibrary, $sLangCountry);
 	
 			$this->view->variables()->set('sSpath',$sLangCountry);

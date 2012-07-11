@@ -17,4 +17,6 @@
 	
 	<publicFolder folder="/public" />
 	
+	<require type="extension" item="coresystem"><![CDATA[ >=0.2 ]]></require>
+	
 </Extension>
