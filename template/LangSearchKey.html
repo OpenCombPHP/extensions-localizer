@@ -1,0 +1,63 @@
+<lib name='jquery'/>
+<css src="localizer:css/LangTranslation.css" />
+<h1>语言翻译</h1>
+<msgqueue/>
+<form method="post" >
+<div style="float:left">
+	<select class='frontlangselect'>
+		<foreach for='$arrLangSelectMenu' key='country_lang' item='content'>
+			<if "{=$sSpath}!=null">
+				<option value="{=$country_lang}" {=$country_lang==$sSpath ? 'selected' : ''} >{=$content['title']}</option>	
+				<else/>
+				<option value="{=$country_lang}" {=$content['selected']==1 ? 'selected' : ''} >{=$content['title']}</option>	
+			</if>
+		</foreach>
+	</select>
+</div>
+<div>
+	<div style="margin-left:200px" class="searchdiv">
+		<input type="text" name="search_key" size="50px" style="height:20px" class="searchkey"/>
+		<input type="hidden" name="hidden_lang_country" value="{=$hidelangcountry}" />
+		<a href="javascript: void(0)" class="search">搜索</a>
+	</div>
+</div>
+	<br/>
+
+<div style="margin-left:50px">
+	<if "{=$bFlag}">
+		<foreach for='$arrLangTranslation' key='country_lang' item='sentenceLibraries'>
+			<foreach for='$sentenceLibraries' key='type' item='sentenceLibrary'>
+				{=$type}语言包:<br/>
+				<foreach for='$sentenceLibrary' key='hash' item='value'>
+					<textarea name="TranslationSentence[{=$country_lang.'@'.$type.'@'.$hash}]" style="width:50%;height:5%">{=$value}</textarea><br/>
+				</foreach>
+				<br/>
+			</foreach>
+		</foreach>
+		<div style="margin-left:45%"><input type="submit" value="提交"/></div>
+	</if>
+	<div>
+	<if "{=$bFlagSearch}">
+		<h1>没有搜索到相关内容</h1>
+	</if>
+</div>
+	<div id="page" style="width:50%">
+		<widget id="paginator" attr.strategy="middle" attr.showFirst="1" attr.showLast="1" attr.showTotal="1" attr.showPre="1" attr.showNext="1" />
+	</div>
+</div>
+</form>
+<script>
+jquery(function(){
+	jquery('.search').click(function(){
+		window.location.href='/?c=org.opencomb.localizer.LangSearchKey&sLangCountry=' + '{=$hidelangcountry}' + '&searchkey=' + jquery('.searchdiv').find('.searchkey').val();;
+	});
+});
+</script>
+
+<script>
+jquery(function(){
+	jquery('.frontlangselect').change(function(){
+		window.location.href='/?c=org.opencomb.localizer.LangTranslation&sSwichFrontLangPath=' + jquery(this).val()+'&type=swich';
+	});
+});
+</script>
