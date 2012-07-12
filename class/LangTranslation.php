@@ -40,7 +40,7 @@ class LangTranslation extends ControlPanel
 	public function process()
 	{
 		
-	
+		$this->doActions();
 		$arrLangCountry = array();
 		$arrLangCountry = explode('_',$this->params['sSwichFrontLangPath']);
 		if(count($arrLangCountry)!=2)
@@ -107,7 +107,7 @@ class LangTranslation extends ControlPanel
 			$this->view->variables()->set('arrLangTranslation',$arrLangTranslationNew);
 		}
 		
-		$this->doActions();
+		
 	}
 	
 	public function form()
