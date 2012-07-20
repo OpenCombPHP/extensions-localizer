@@ -50,7 +50,7 @@
 <script>
 jquery(function(){
 	jquery('.search').click(function(){
-		window.location.href='/?c=org.opencomb.localizer.LangSearchKey&sLangCountry=' + '{=$hidelangcountry}' + '&searchkey=' + jquery('.searchdiv').find('.searchkey').val();;
+		window.location.href='?c=org.opencomb.localizer.LangSearchKey&sLangCountry=' + '{=$hidelangcountry}' + '&searchkey=' + jquery('.searchdiv').find('.searchkey').val();;
 	});
 });
 </script>
@@ -58,7 +58,7 @@ jquery(function(){
 <script>
 jquery(function(){
 	jquery('.frontlangselect').change(function(){
-		window.location.href='/?c=org.opencomb.localizer.LangTranslation&sSwichFrontLangPath=' + jquery(this).val()+'&type=swich';
+		window.location.href='?c=org.opencomb.localizer.LangTranslation&sSwichFrontLangPath=' + jquery(this).val()+'&type=swich';
 	});
 });
 </script>
