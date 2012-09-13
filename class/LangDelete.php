@@ -42,13 +42,13 @@ class LangDelete extends ControlPanel
 			return;
 		}
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aSetting->deleteItem('/localizer', $dPath);
+		$aSetting->deleteValue('/localizer/'.$dPath);
 		$arrNewLang = $this->langIterator();
 		
 		$aSetting->deleteKey('/localizer');
 		foreach($arrNewLang as $key=>$value)
 		{
-			$aSetting->setItem('/localizer',$key,$value);
+			$aSetting->setValue('/localizer/'.$key,$value);
 		}
 		
 		$this->createMessage(Message::success,"%s ",$skey='删除成功');
@@ -59,13 +59,13 @@ class LangDelete extends ControlPanel
 	public function langIterator(){
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLang[$value] = $aKey->item($value,array());
+		foreach($aSetting->value('/localizer',array()) as $key => $value){
+			$arrTemp = $aSetting->value('/localizer/'.$key);
+			if($arrTemp['used'] == '1'){
+				$arrLang[$key] = $arrTemp;
+			}
 		}
 		return $arrLang;
 	}
 	
 }
-
-?>

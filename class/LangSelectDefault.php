@@ -52,13 +52,13 @@ class LangSelectDefault extends ControlPanel
 		$aSetting->deleteKey('/localizer');
 		foreach($arrLang as $key=>$value)
 		{
-			$aSetting->setItem('/localizer',$key,$value);
+			$aSetting->setValue('/localizer/'.$key,$value);
 		}
 		$aSettingSingle = Setting::singleton();
 		$aSettingSingle->deleteKey('service/local');
-		$aSettingSingle->setItem('service/locale','language',$arrDpath[0]);
-		$aSettingSingle->setItem('service/locale','country',$arrDpath[1]);
-		$aSettingSingle->setItem('service/locale','title',$arrLang[$sDpath]['title']);
+		$aSettingSingle->setValue('service/locale/language',$arrDpath[0]);
+		$aSettingSingle->setValue('service/locale/country',$arrDpath[1]);
+		$aSettingSingle->setValue('service/locale/title',$arrLang[$sDpath]['title']);
 		
 		//触发事件
 		$aEventManager = EventManager::singleton() ;
@@ -72,14 +72,12 @@ class LangSelectDefault extends ControlPanel
 	{
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLang[$value]=$aKey->item($value,array());
+		foreach($aSetting->value('/localizer',array()) as $key => $value){
+			$arrTemp = $aSetting->value('/localizer/'.$key);
+			if($arrTemp['used'] == '1'){
+				$arrLang[$key] = $arrTemp;
+			}
 		}
 		return $arrLang;
 	}
-	
-	
 }
-
-?>

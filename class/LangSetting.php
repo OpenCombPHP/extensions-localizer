@@ -81,7 +81,7 @@ class LangSetting extends ControlPanel
 		//检测是否已存在语言
 		for($i=0;$i<count($this->params['Country_text']);$i++)
 		{
-			if($aSetting->hasItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i]))
+			if($aSetting->hasValue('/localizer/'.$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i]))
 			{
 				$skey="此语言";
 				$this->createMessage(Message::error,"%s 已存在",$skey) ;
@@ -106,12 +106,12 @@ class LangSetting extends ControlPanel
 			}
 		}
 		
-		$aKey = $aSetting->key('/localizer',true);
-		if(count($aKey->itemIterator())==0)
+		$aKey = $aSetting->value('/localizer',array());
+		if(count($aKey)==0)
 		{
 			for($i=0;$i<count($this->params['Country_text']);$i++)
 			{
-				$aSetting->setItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
+				$aSetting->setValue('/localizer/'.$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
 						array('title'=>$this->params['Title_text'][$i]
 							  ,'selected'=>$i==0 ?1:0
 							  ,'country'=>$this->params['Country_text'][$i]
@@ -125,7 +125,7 @@ class LangSetting extends ControlPanel
 		}else{
 			for($i=0;$i<count($this->params['Country_text']);$i++)
 			{
-				$aSetting->setItem('/localizer',$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
+				$aSetting->setValue('/localizer/'.$this->params['Language_text'][$i].'_'.$this->params['Country_text'][$i],
 						array('title'=>$this->params['Title_text'][$i]
 								,'selected'=>0
 								,'country'=>$this->params['Country_text'][$i]
@@ -142,12 +142,12 @@ class LangSetting extends ControlPanel
 	public function langIterator(){
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLang[$value]=$aKey->item($value,array());
+		foreach($aSetting->value('/localizer',array()) as $key => $value){
+			$arrTemp = $aSetting->value('/localizer/'.$key);
+			if($arrTemp['used'] == '1'){
+				$arrLang[$key] = $arrTemp;
+			}
 		}
 		return $arrLang;
 	}
 }
-
-?>

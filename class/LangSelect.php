@@ -28,24 +28,21 @@ class LangSelect extends Widget {
 	{	
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value)
-		{
-			$arrTemp=$aKey->item($value,array());
-			if($arrTemp['used']=='1')
-			{
-				$arrLang[$value]=$aKey->item($value,array());
+		foreach($aSetting->value('/localizer',array()) as $key => $value){
+			$arrTemp = $aSetting->value('/localizer/'.$key);
+			if($arrTemp['used'] == '1'){
+				$arrLang[$key] = $arrTemp;
 			}
 		}
 		if(count($arrLang)){
 			return $arrLang;
 		}else{
 			$aSetting = Setting::singleton();
-			$sLanguage = $aSetting->item('service/locale','language',array());
-			$sCountry = $aSetting->item('service/locale','country',array());
-			if($aSetting->item('service/locale','title',array()))
+			$sLanguage = $aSetting->value('service/locale/language','CN');
+			$sCountry = $aSetting->value('service/locale/country','zh');
+			if($aSetting->value('service/locale/title',array()))
 			{
-				$sTitle = $aSetting->item('service/locale','title',array());
+				$sTitle = $aSetting->value('service/locale/title',array());
 			}else{
 				$sTitle = "简体中文";
 			};
@@ -59,15 +56,15 @@ class LangSelect extends Widget {
 			);
 			
 			$aSettingLocalizer = Extension::flyweight('localizer')->setting();
-			$aSettingLocalizer->setItem('/localizer',$sLanguage.'_'.$sCountry,$arrItem);
+			$aSettingLocalizer->setValue(
+				'/localizer/'.$sLanguage.'_'.$sCountry,
+				$arrItem
+			);
 			
-			$aKey=$aSettingLocalizer->key('/localizer',true);
-			foreach($aKey->itemIterator() as $key=>$value)
-			{
-				$arrTemp=$aKey->item($value,array());
-				if($arrTemp['used']=='1')
-				{
-					$arrLang[$value]=$aKey->item($value,array());
+			foreach($aSetting->value('/localizer',array()) as $key => $value){
+				$arrTemp = $aSetting->value('/localizer/'.$key);
+				if($arrTemp['used'] == '1'){
+					$arrLang[$key] = $arrTemp;
 				}
 			}
 			return $arrLang;
@@ -77,10 +74,8 @@ class LangSelect extends Widget {
 	public function selectedLangCountry()
 	{
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value)
-		{
-			$arrTemp=$aKey->item($value,array());
+		foreach($aSetting->value('/localizer',array()) as $key => $value){
+			$arrTemp = $aSetting->value('/localizer/'.$key);
 			if($arrTemp['selected']==1)
 			{
 				$sSeletedLangCountry = $arrTemp['lang'].'_'.$arrTemp['country'];
@@ -95,5 +90,4 @@ class LangSelect extends Widget {
 		$sLangCountry = $aLocale->language().'_'.$aLocale->country();
 		return $sLangCountry;
 	}
-	
 }

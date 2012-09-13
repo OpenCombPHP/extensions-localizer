@@ -60,7 +60,7 @@ class LangSwich extends Controller
 			$aSetting->deleteKey('/localizer');
 			foreach($arrLang as $key=>$value)
 			{
-				$aSetting->setItem('/localizer',$key,$value);
+				$aSetting->setValue('/localizer/'.$key,$value);
 			}
 			
 			Locale::switchSessionLocale($arrLangCountry[0],$arrLangCountry[1],true);
@@ -79,9 +79,9 @@ class LangSwich extends Controller
 	static function langIterator(){
 		$arrLang = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLang[$value]=$aKey->item($value,array());
+		$aKey=$aSetting->value('/localizer',array());
+		foreach($aKey as $key=>$value){
+			$arrLang[$key]=$aSetting->value('/localizer/'.$key,array());
 		}
 		return $arrLang;
 	}

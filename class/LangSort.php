@@ -90,10 +90,10 @@ class LangSort extends ControlPanel
 	{
 		$arrLangOption = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
+		$aKey=$aSetting->value('/localizer',array());
 		$i=0;
-		foreach($aKey->itemIterator() as $key=>$value){
-			$arrLangOption[$i++]=$value;
+		foreach($aKey as $key=>$value){
+			$arrLangOption[$i++]=$key;
 		}
 		return $arrLangOption;
 	}
@@ -102,15 +102,15 @@ class LangSort extends ControlPanel
 	{
 		$arrDeleteUP = array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
+		$aKey=$aSetting->value('/localizer',array());
 		$i=0;
-		foreach($aKey->itemIterator() as $key=>$value)
+		foreach($aKey as $key=>$value)
 		{
-			if($value==$sPathUp)
+			if($key==$sPathUp)
 			{
 				continue;
 			}else{
-				$arrDeleteUP[$value]=$aKey->item($value,array());
+				$arrDeleteUP[$key]=$aSetting->value('/localizer/'.$key,array());
 			}
 		}
 		return $arrDeleteUP;
@@ -120,12 +120,12 @@ class LangSort extends ControlPanel
 	{
 		$arrUp=array();
 		$aSetting = Extension::flyweight('localizer')->setting();
-		$aKey=$aSetting->key('/localizer',true);
-		foreach($aKey->itemIterator() as $key=>$value)
+		$aKey=$aSetting->value('/localizer',array() );
+		foreach($aKey as $key=>$value)
 		{
-			if($value==$sPathUp)
+			if($key==$sPathUp)
 			{
-				$arrUp=$aKey->item($value,array());
+				$arrUp=$aSetting->value('/localizer/'.$key,array());
 			}
 		}
 		return $arrUp;
@@ -153,7 +153,7 @@ class LangSort extends ControlPanel
 		$aSetting->deleteKey('/localizer');
 		foreach($arrNewLang as $key=>$value)
 		{
-			$aSetting->setItem('/localizer',$key,$value);
+			$aSetting->setValue('/localizer/'.$key,$value);
 		}
 	}
 }
